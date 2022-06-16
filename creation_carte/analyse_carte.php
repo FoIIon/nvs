@@ -9,7 +9,7 @@ $taille_y = 201;
 
 $image_carte = imagecreatefrompng("carte413.png");
 
-$sql = "DELETE FROM carte2";
+$sql = "DELETE FROM carte";
 $mysqli->query($sql);
 
 for ($x_pixel = 0; $x_pixel < $taille_x; $x_pixel++) {
@@ -52,12 +52,12 @@ for ($x_pixel = 0; $x_pixel < $taille_x; $x_pixel++) {
 		$x = $x_pixel;
 		$y = 200 - $y_pixel;
 		
-		$sql = "INSERT INTO carte2 (id_carte, x_carte, y_carte, occupee_carte, fond_carte, idPerso_carte, image_carte) VALUES (0, $x, $y, '0', '$image_fond', NULL, NULL)";
+		$sql = "INSERT INTO carte (id_carte, x_carte, y_carte, occupee_carte, fond_carte, idPerso_carte, image_carte) VALUES (0, $x, $y, '0', '$image_fond', NULL, NULL)";
 		$mysqli->query($sql);
 	}
 }
 
-$sql = "UPDATE carte2 SET coordonnees = CONCAT (x_carte, ';', y_carte)";
+$sql = "UPDATE carte SET coordonnees = CONCAT (x_carte, ';', y_carte)";
 $mysqli->query($sql);
 
 echo "Fin creation carte";
