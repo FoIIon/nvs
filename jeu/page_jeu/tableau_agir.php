@@ -176,6 +176,72 @@
             
             <br />
             
+            <div class="row border border-dark" style="background-color: palevioletred;">
+                <div class="col border border-dark" >
+                    <div  style="background-color: palevioletred;" align='center'><b>Caractéristiques de combat</b></div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-3 border border-dark"></div>
+                    <?php 
+                    if ($type_perso != 5) { 
+                    ?>
+                    <div class="col border border-dark" align='center'><b>Rapproché</b></div>
+                    <?php 
+                    }
+                    
+                    if ($type_perso != 6 && $type_perso != 4) { 
+                    ?>
+                    <div class="col border border-dark" align='center' ><b>A distance</b></div>
+                    <?php 
+                    }
+                    else if ($type_perso == 4) {
+                    ?>
+                    <div class="col border border-dark" align='center'><b>Rapproché</b></div>
+                    <?php 	
+                    }
+                    ?>
+                <div class="w-100"></div>
+                <div class="col-3 border border-dark"><b>Armes</b></div>
+                    <?php 
+                    if ($type_perso != 5) { 
+                    ?>
+                    <div class="col border border-dark" align='center'><?php echo $nom_arme_cac; ?></div>
+                    <?php 
+                    }
+                    
+                    if ($type_perso != 6 && $type_perso != 4) { 
+                    ?>
+                    <div class="col border border-dark" align='center'><?php echo $nom_arme_dist; ?></div>
+                    <?php 
+                    }
+                    else if ($type_perso == 4) {
+                    ?>
+                    <div class="col border border-dark" align='center'><?php echo $nom_arme_cac2; ?></div>
+                    <?php 	
+                    }
+                    ?>
+                <div class="w-100"></div>
+                <div class="col-3 border border-dark"><b>PA</b></div>
+                    <?php 
+                    if ($type_perso != 5) { 
+                    ?>
+                    <div class="col border border-dark" align='center'><?php echo $coutPa_arme_cac; ?></div>
+                    <?php 
+                    }
+                    
+                    if ($type_perso != 6 && $type_perso != 4) { 
+                    ?>
+                    <div class="col border border-dark" align='center'><?php echo $coutPa_arme_dist; if (possede_lunette_visee($mysqli, $id_perso)) { echo " (+2)"; } ?></div>
+                    <?php 
+                    }
+                    else if ($type_perso == 4) {
+                    ?>
+                    <div class="col border border-dark" align='center' nowrap="nowrap"><?php echo $coutPa_arme_cac2; ?></div>
+                    <?php 	
+                    }
+                    ?>
+                <div class="w-100"></div>
+            </div>
             <table border="2" style="background-color: palevioletred;" width="100%">
                 <tr>
                     <td colspan='3' bgcolor="lightgrey" align='center'><b>Caractéristiques de combat</b></td>
