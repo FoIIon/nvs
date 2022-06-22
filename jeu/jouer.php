@@ -15,24 +15,26 @@ date_default_timezone_set('Europe/Paris');
 require_once("page_jeu/logique_batiment.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="fr">
 	<head>
 		<title>Nord VS Sud</title>
 		
 		<!-- Required meta tags -->
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
 		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 		
 		<link href="../style2.css" rel="stylesheet" type="text/css">
-		
+		<link href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css" rel="stylesheet">
+
+
 	</head>
 
 	<body background='../images/background.jpg'>
 		<main class="flex-shrink-0" >
-			<div class="container" style="padding:0!important"  >
+			<div class="container"  style="padding:0!important"  >
 				<?php
 				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
 				
@@ -360,7 +362,7 @@ require_once("page_jeu/logique_batiment.php");
 					<!-- logique deplacement -->
 					<?php require_once("page_jeu/logique_ramassage.php" ); ?>
 					<!-- Fin logique deplacement -->
-					<div class="row " >
+					<div class="row py-2" >
 						<div class="col-lg-4 mx-auto" style="background: red;">
 							 <!--tableau agir  style="background: red;"-->
 							<?php require_once("page_jeu/tableau_agir.php" ); ?>
@@ -397,9 +399,8 @@ require_once("page_jeu/logique_batiment.php");
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
 		<script>
 		$(function () {
 			$('[data-toggle="tooltip"]').tooltip();

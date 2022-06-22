@@ -317,7 +317,7 @@ function affiche_jauge ($p, $p_max){
 	else 
 		$color = "#00FF00"; //vert
 	
-	echo '<table border=1 width=100% bgcolor=0 cellpadding=0 cellspacing=0>';
+	echo '<table data-toggle="table" border=1 width=100% bgcolor=0 cellpadding=0 cellspacing=0>';
 	echo '	<tr>';
 	echo '		<td style="padding:0">';
 	echo '			<table align="center" width=100% border=0 cellpadding=0 cellspacing=0>';
