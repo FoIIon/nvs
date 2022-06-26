@@ -1,5 +1,5 @@
 
-                <table  cellspacing="0" cellpadding="0" style:no-padding>
+                <table  data-toggle="table" border="0" cellspacing="0" cellpadding="0" style:no-padding width="100%">
                     <tr>
                         <td background='../images/background.jpg' align='center' valign='top'colspan='2'>
                             <img src='../images/Action.png'/>

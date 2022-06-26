@@ -7,7 +7,7 @@ $mysqli = db_connexion();
 $taille_x = 201;
 $taille_y = 201;
 
-$image_carte = imagecreatefrompng("carte413.png");
+$image_carte = imagecreatefrompng("Carte3.png");
 
 $sql = "DELETE FROM carte";
 $mysqli->query($sql);
