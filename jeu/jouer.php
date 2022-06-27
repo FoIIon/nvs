@@ -32,7 +32,10 @@ require_once("page_jeu/logique_batiment.php");
 
 	</head>
 
-	<body background='../images/background.jpg'>
+	<body background='../images/body_background.jpg'>
+		<header>
+			<?php include("page_jeu/menu_header.php"); ?>
+		</header>
 		<main class="flex-shrink-0" >
 			<div class="container"  style="padding:0!important"  >
 				<?php
@@ -372,6 +375,7 @@ require_once("page_jeu/logique_batiment.php");
 							<?php require_once("page_jeu/rosace_deplacement.php" ); ?>
 							<!-- Fin rosace de deplacement -->
 							<!--Debut tableau des actions -->
+							<br />
 							<?php require_once("page_jeu/tableau_action.php" ); ?>
 							<!-- Fin tableau des actions-->
 						</div>
