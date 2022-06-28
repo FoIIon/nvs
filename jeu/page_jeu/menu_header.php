@@ -1,5 +1,7 @@
 <?php $id_joueur_camp 	= $_SESSION["ID_joueur"];
-        
+        $date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
+				
+				$date_dla = date('d-m-Y H:i:s', $n_dla);
         // recuperation des infos du perso
         $sql_camp = "SELECT clan FROM perso WHERE idJoueur_perso='$id_joueur_camp'";
         $res_camp = $mysqli->query($sql_camp);
@@ -12,7 +14,7 @@
         } else if ($id_joueur_perso_camp == 2){
             $discord_link = 'https://discord.gg/zE9knsyRGr';
         } ?>
-<div class="bg-dark">
+<div class="bg-secondary">
 	<div class="container">
    		<div class="row ">
    		 
@@ -21,16 +23,20 @@
               <a class="navbar-brand  align-bottom " href="">
               	<img src="../images/accueil/banniere.jpg" class="d-inline-block  align-bottom" loading="lazy" alt='banniere Nord VS Sud' width=150 height=63>
               </a>
-              
               	
+                </div>
+                <div class="navbar-nav ml-auto d-block"  style="padding-top: 1em"> 
+                  <img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1><?php echo ''.$date_serveur->format('H:i:s');?></span></b>
+                  <br/>
+                  <span>Prochain tour :  "<?php echo ''.$date_dla; ?>"</span>
                 </div>
         	</nav>
         	
      	</div>
      	<div class="row">
    		 
-        <nav class="col navbar navbar-dark  navbar-expand-lg">
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="col navbar navbar-dark  navbar-expand-md">
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -44,6 +50,9 @@
                       <a class="dropdown-item" href="http://www.forum.persee.ovh/" target="_blank">Forum</a>
                       <a class="dropdown-item" href="https://discord.gg/SpZ87fYZeZ" target="_blank">Discord commun</a>
                       <a class="dropdown-item" href="<?php echo $discord_link; ?> "  target="_blank">Discord camp</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="question_anim.php">Question aux anims</a>
+                      <a class="dropdown-item" href="capture.php">Déclarer une capture</a>
                     </div>
                   </li>
                   <li class="nav-item dropdown">
@@ -53,37 +62,16 @@
                       <a class="dropdown-item" href="../faq.php">FAQ</a>
                     </div>
                   </li>
-                 
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">CIM</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown06">
-                      <a class="dropdown-item" href="question_anim.php">Question aux anims</a>
-                      <a class="dropdown-item" href="capture.php">Déclarer une capture</a>
-                      <a class="dropdown-item" href="missions.php">Missions</a>
-                    </div>
+                  <li class="nav-item">
+                      <a class="nav-link" href="missions.php">Missions</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="visu.php">Visu</a>
                   </li>
-                  <!-- Do not show on large screen -->
-                  <li class="nav-item dropdown d-lg-none">
-                    <a class="nav-link dropdown-toggle" href="<?php 
-                      //if we are on local or on prod
-                      if($_SERVER["SERVER_NAME"] == "localhost"){
-                        echo "view/index.php";
-                      }else{
-                        echo "";   
-                      }?>" id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="flag-icon flag-icon-gb"> </span> English</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown09">
-                        <a class="dropdown-item" href="<?php 
-                      //if we are on local or on prod
-                      if($_SERVER["SERVER_NAME"] == "localhost"){
-                        echo "view/fr/index.php";
-                      }else{
-                        echo "fr";   
-                      }?>"><span class="flag-icon flag-icon-fr"> </span>  French</a>
-                    </div>
-            	  </li>
+                  <?php
+                      //show only if the user has some management permissions
+                      (redac_perso($mysqli, $id_perso) || anim_perso($mysqli, $id_perso) || $admin) ? require_once("menu_header_gestion.php") : "";
+                  ?>
                 </ul>
               </div>
         	</nav>

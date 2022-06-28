@@ -305,8 +305,25 @@ function get_color_pv ($pv, $pv_max){
 	echo "<font color=\"$color\">$pv</font>";
 }
 
+function get_progress_bar_color($p, $p_max){
+	$pourc = $p * 100 / $p_max;
+	$color ="";
+	
+	if ($pourc < 25)
+		$color = "danger"; //rouge
+	elseif ($pourc < 50)
+		$color = "warning"; //orange
+	elseif ($pourc < 75)
+		$color = "info"; //jaune
+	else 
+		$color = "success"; //vert
+
+	return $color;
+}
+
 function affiche_jauge ($p, $p_max){ 
 	$pourc = $p * 100 / $p_max;
+	
 	
 	if ($pourc < 25)
 		$color = "#FF0000"; //rouge
