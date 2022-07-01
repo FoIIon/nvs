@@ -273,7 +273,7 @@ if($id_compagnie){
 	}
 }
 else {
-	$image_compagnie_perso = "";
+	$iMage_compagnie_perso = "";
 }
 
 // Le perso est-il membre de l'etat major de son camp ?
@@ -293,7 +293,7 @@ if ($nb_em) {
 	$pourc_icone = "20%";
 } else {
 	$pourc_icone = "14%";
-}
+} 
 
 // Récupération de tous les persos du joueur
 $sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso' ORDER BY id_perso";
@@ -320,21 +320,19 @@ $nom_perso_chef = "";
 
 	</head>
 
-	<body background='../images/body_background.jpg'>
+	<body background='../images/background-wood.jpg'>
 		<header>
 			<?php include("page_jeu/menu_header.php"); ?>
 		</header>
 		<main class="flex-shrink-0" >
 			<div class="container-xl"  style="padding:0!important"  >
 				<div class="row">
-					<div class="col">
+					<div class="col-5">
 						<!-- Début du tableau d'information-->
 						<?php require_once("page_jeu/tableau_information.php"); ?>
 						<!--Fin du tableau d'information-->
 					</div>
-				</div>
-				<div class="row">
-					<div class="col d-none d-md-block">
+					<div class="col-7 d-none d-md-block">
 						<!-- Début menu-->
 						<?php require_once("page_jeu/menu.php"); ?>
 						<!-- Fin menu -->
@@ -399,7 +397,7 @@ $nom_perso_chef = "";
 						
 						<div class="col-lg-8 mx-auto">
 						<!--<div class="col-lg-8 mx-auto" style="background: blue;">-->
-							<div class="row" >
+							<div class="row mb-3 p-3 bg-light">
 								<div class="col-4">
 									<div class="text-center justify-content-center"><a href="jouer.php">Rafraîchir la page : <img class='img-fluid' src='../images/refreshv2.png'  width='38' height='38'/></a></div>
 								</div>

@@ -1,5 +1,5 @@
 <!-- Début du tableau d'information-->
-<table border=1 align="center" width=90%>
+<table data-toggle="table"  width=100%>
     <tr>
         <td width=120>
             <center>

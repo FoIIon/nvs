@@ -68,9 +68,23 @@
                   <li class="nav-item">
                     <a class="nav-link" href="visu.php">Visu</a>
                   </li>
+                  <!-- Show only on smaller screens-->
+                  <li class="nav-item dropdown 	d-none d-sm-block d-md-none">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">A trier</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown07">
+                      <a class="dropdown-item" href="../profil.php">Profil</a>
+                      <a class="dropdown-item" href="../evenement.php">Evenement</a>
+                      <a class="dropdown-item" href="../sac.php">Sac</a>
+                      <a class="dropdown-item" href="../carte2.php">Carte</a>
+                      <a class="dropdown-item" href="../messagerie.php">Messagerie</a>
+                      <a class="dropdown-item" href="../classement.php">Classement</a>
+                      <a class="dropdown-item" href="../compagnie.php">Compagnie</a>
+                    </div>
+                  </li>
                   <?php
                       //show only if the user has some management permissions
                       (redac_perso($mysqli, $id_perso) || anim_perso($mysqli, $id_perso) || $admin) ? require_once("menu_header_gestion.php") : "";
+
                   ?>
                 </ul>
               </div>
