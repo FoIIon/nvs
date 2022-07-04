@@ -1,5 +1,5 @@
 <!-- Début du tableau d'information-->
-<table data-toggle="table"  width=100%>
+<table data-toggle="table"  background='../images/background.jpg' width=100%>
     <tr>
         <td width=120>
             <center>
@@ -33,7 +33,6 @@
                 }
                 ?>
                 </select>
-                <input type='submit' name='select_perso' value='ok' />
             </form>
         </td>
         <td align=center><b>Grade : <a href="grades.php" target='_blank'></b><?php echo $nom_grade_perso; ?>

@@ -326,10 +326,12 @@ $nom_perso_chef = "";
 		</header>
 		<main class="flex-shrink-0" >
 			<div class="container-xl"  style="padding:0!important"  >
-				<div class="row">
-					<div class="col-5">
+				<div class="row ">
+					<div class="col-md-5">
 						<!-- Début du tableau d'information-->
-						<?php require_once("page_jeu/tableau_information.php"); ?>
+						<div class="mt-3">
+							<?php require_once("page_jeu/tableau_information.php"); ?>
+						</div>
 						<!--Fin du tableau d'information-->
 					</div>
 					<div class="col-7 d-none d-md-block">
@@ -397,7 +399,7 @@ $nom_perso_chef = "";
 						
 						<div class="col-lg-8 mx-auto">
 						<!--<div class="col-lg-8 mx-auto" style="background: blue;">-->
-							<div class="row mb-3 p-3 bg-light">
+							<div class="row mb-3 p-3 bg-light order-md-first">
 								<div class="col-4">
 									<div class="text-center justify-content-center"><a href="jouer.php">Rafraîchir la page : <img class='img-fluid' src='../images/refreshv2.png'  width='38' height='38'/></a></div>
 								</div>

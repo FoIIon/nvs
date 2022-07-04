@@ -25,10 +25,10 @@
               </a>
               	
                 </div>
-                <div class="navbar-nav ml-auto d-block"  style="padding-top: 1em"> 
+                <div class="navbar-nav ml-auto d-block "  style="padding-top: 1em"> 
                   <img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1><?php echo ''.$date_serveur->format('H:i:s');?></span></b>
                   <br/>
-                  <span>Prochain tour :  "<?php echo ''.$date_dla; ?>"</span>
+                  <span>Prochain tour :  <?php echo ''.$date_dla; ?></span>
                 </div>
         	</nav>
         	
@@ -42,10 +42,10 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item">
-                    <a class="nav-link" href="../logout.php">Déconnexion</a>
+                    <a class="nav-link text-white" href="../logout.php">Déconnexion</a>
                   </li>
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"  href="#" id="dropdown04" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Communication</a>
+                    <a class="nav-link dropdown-toggle text-white"  href="#" id="dropdown04" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Communication</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
                       <a class="dropdown-item" href="http://www.forum.persee.ovh/" target="_blank">Forum</a>
                       <a class="dropdown-item" href="https://discord.gg/SpZ87fYZeZ" target="_blank">Discord commun</a>
@@ -56,21 +56,21 @@
                     </div>
                   </li>
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Le jeu</a>
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Le jeu</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown05">
                       <a class="dropdown-item" href="../regles/regles.php">Règles</a>
                       <a class="dropdown-item" href="../faq.php">FAQ</a>
                     </div>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link" href="missions.php">Missions</a>
+                      <a class="nav-link text-white" href="missions.php">Missions</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="visu.php">Visu</a>
+                    <a class="nav-link text-white" href="visu.php">Visu</a>
                   </li>
                   <!-- Show only on smaller screens-->
                   <li class="nav-item dropdown 	d-none d-sm-block d-md-none">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">A trier</a>
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">A trier</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown07">
                       <a class="dropdown-item" href="../profil.php">Profil</a>
                       <a class="dropdown-item" href="../evenement.php">Evenement</a>

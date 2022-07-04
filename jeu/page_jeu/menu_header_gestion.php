@@ -1,5 +1,5 @@
 <li class="nav-item dropdown <?= ($nb_demande_a_traiter != null && $nb_demande_a_traiter > 0) ? 'bg-danger' : '' ;?>">
-    <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestion</a>
+    <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown06" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestion</a>
     <div class="dropdown-menu" aria-labelledby="dropdown06">
         <?= 
         //Redacteur
