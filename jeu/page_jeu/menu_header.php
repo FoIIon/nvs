@@ -69,7 +69,7 @@
                     <a class="nav-link text-white" href="visu.php">Visu</a>
                   </li>
                   <!-- Show only on smaller screens-->
-                  <li class="nav-item dropdown 	d-none d-sm-block d-md-none">
+                  <li class="nav-item dropdown 	 d-sm-block d-md-none">
                     <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">A trier</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown07">
                       <a class="dropdown-item" href="../profil.php">Profil</a>
