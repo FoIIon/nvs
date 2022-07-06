@@ -442,7 +442,10 @@ if($dispo == '1' || $admin){
 		<script>
 		$(function () {
 			$('[data-toggle="tooltip"]').tooltip();
-			$('[data-toggle="popover"]').popover(); 
+			var popoverTriggerList = [].slice.call(document.querySelectorAll("[data-bs-toggle='popover']"))
+			var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+				return new bootstrap.Popover(popoverTriggerEl)
+			})
 		})
 		</script>
 	</body>
@@ -474,9 +477,9 @@ function affiche_image_armure($image_armures, $nom_armure, $defense_armure, $des
 								  
 	echo "<td width=50 height=50 align=center>
 			<img tabindex='0' src='../images/armures/$image_armures' width=50 height=50 
-					data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'
+					data-bs-toggle='popover' data-bs-trigger='focus' data-bs-html='true' data-bs-placement='bottom'
 					title=\"<b>$nom_armure</b>\" ";
-	echo "			data-content=\"	<div><img src=../images/armures/$image_armures></div>
+	echo "			data-bs-content=\"	<div><img src=../images/armures/$image_armures></div>
 									<div><u>Defense :</u> $defense_armure</div>";
 			 if($BonusPerception_armures){
 				echo "<div><u>Bonus Perception :</u> $BonusPerception_armures</div>";
@@ -496,9 +499,9 @@ function affiche_image_arme($image_arme, $nom_arme, $description_arme, $portee_a
 	
 	echo "	<td width=50 height=50 align=center>
 				<img tabindex='0' src='../images/armes/$image_arme' width=50 height=50 
-					data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'
+					data-bs-toggle='popover' data-bs-trigger='focus' data-bs-html='true' data-bs-placement='bottom'
 					title=\"<b>$nom_arme</b>\" ";
-	echo "			data-content=\"	<div><img src=../images/armes/$image_arme></div>
+	echo "			data-bs-content=\"	<div><img src=../images/armes/$image_arme></div>
 									<div><u>Portee :</u> $portee_arme</div>
 									<div><u>Degats :</u> $degats_arme</div>
 									<div><b>Description</b></div>

@@ -80,7 +80,10 @@
                     // TITLE POPOVER
                     echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'><img alt='".$nom_grade_perso."' title='".$nom_grade_perso."' src='../images/grades/" . $id_grade_perso . ".gif' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div> ";					
                     
-                    afficher_infos_compagnie($nom_compagnie_perso, $image_compagnie_perso);
+                    if(isset($image_compagnie_perso)){
+                        afficher_infos_compagnie($nom_compagnie_perso, $image_compagnie_perso);
+                    }
+                    
                     
                     if (!in_bat($mysqli,$id_perso)) {
                         
@@ -99,7 +102,7 @@
                     echo "\" ";
                     
                     // DATA CONTENT POPOVER
-                    echo "			data-bs-content='<div></div>'\"";
+                    echo "			data-bs-content=\" ";
                     
                     afficher_liens_objet($nb_o, $x, $y);
                     afficher_liens_rail_genie($genie_compagnie_perso, $fond_im);
@@ -124,8 +127,10 @@
                     // TITLE POPOVER
                     echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'><img alt='".$nom_grade_perso."' title='".$nom_grade_perso."' src='../images/grades/" . $id_grade_perso . ".gif' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div>";
                     
-                    afficher_infos_compagnie($nom_compagnie_perso, $image_compagnie_perso);
                     
+                    if(isset($image_compagnie_perso)){
+                        afficher_infos_compagnie($nom_compagnie_perso, $image_compagnie_perso);
+                    }
                     if (!in_bat($mysqli,$id_perso)) {
                         
                         if (!in_train($mysqli,$id_perso)) {
@@ -142,7 +147,7 @@
                     
                     echo "\" ";
                     // DATA CONTENT POPOVER
-                    echo "			data-bs-content='<div></div>'\"";
+                    echo "			data-bs-content=\" ";
                     
                     afficher_liens_objet($nb_o, $x, $y);
                     afficher_liens_rail_genie($genie_compagnie_perso, $fond_im);
@@ -233,7 +238,7 @@
                                             data-bs-html='true' 
                                             data-bs-placement='bottom' ";
                                 echo "		title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$idI_bat."' target='_blank'>".$nom_bat." ".$nom_i_bat." [".$idI_bat."]</a></div>\"";
-                                echo "		data-bs-content='<div></div>'\"";
+                                echo "		data-bs-content=\" ";
                                 if (in_bat($mysqli,$id_perso)) {
                         
                                     $id_instance_in_bat = in_bat($mysqli,$id_perso);

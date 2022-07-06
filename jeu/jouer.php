@@ -427,10 +427,13 @@ $nom_perso_chef = "";
 		<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
 		<script>
 		$(function () {
-			$('[data-bs-toggle="tooltip"]').tooltip();
-			$('[data-bs-toggle="popover"]').popover(); 
+			var popoverTriggerList = [].slice.call(document.querySelectorAll("[data-bs-toggle='popover']"))
+			var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+				return new bootstrap.Popover(popoverTriggerEl)
+			})
 		})
 		
+
 		function openNav() {
 			if(document.getElementById("mySidebar").style.width == "" || document.getElementById("mySidebar").style.width == "0px") {
 				document.getElementById("mySidebar").style.width = "250px";

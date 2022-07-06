@@ -36,7 +36,7 @@
                     
                     $perception_final_perso = $perception_perso + $bonusPerception_perso;
                     
-                    echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'.$perception_final_perso.'</a>';
+                    echo "<a tabindex='0' href='#' data-bs-toggle='popover' data-bs-trigger='focus' data-bs-placement='top' data-bs-html='true' data-bs-content=".$texte_tooltip.'">'.$perception_final_perso.'</a>';
                     
                     ?>&nbsp;</td>
                 </tr>
@@ -57,7 +57,7 @@
                     
                     $paMax_final_perso = $paMax_perso + $bonusPA_perso;
                     
-                    echo $pa_perso . ' / <a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'. $paMax_final_perso.'</a>';
+                    echo $pa_perso . " / <a tabindex='0' href='#' data-bs-toggle='popover' data-bs-trigger='focus' data-bs-placement='top' data-bs-html='true' data-bs-content=".$texte_tooltip.'">'. $paMax_final_perso.'</a>';
                     
                     ?>&nbsp;</td>
                 </tr>
@@ -93,7 +93,7 @@
                         
                         $texte_tooltip_pmMax .= ")</b>";
                     }
-                    echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip_pm.'">' . $pm_perso  . '</a> / <a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip_pmMax.'">' . $pmMax_perso . '</a>';
+                    echo "<a tabindex='0' href='#' data-bs-toggle='popover' data-bs-trigger='focus' data-bs-placement='top' data-bs-html='true' data-bs-content=".$texte_tooltip_pm.'">' . $pm_perso  . "</a> / <a tabindex='0' href='#' data-bs-toggle='popover' data-bs-trigger='focus' data-bs-placement='top' data-bs-html='true' data-bs-content=".$texte_tooltip_pmMax.'">' . $pmMax_perso . '</a>';
                     ?>&nbsp;</td>
                 </tr>
             </table>
@@ -122,7 +122,7 @@
                     
                     $recup_final = $recup_perso + $bonusRecup_perso;
                     
-                    echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'.$recup_final.'</a>';
+                    echo "<a tabindex='0' href='#' data-bs-toggle='popover' data-bs-trigger='focus' data-bs-placement='top' data-bs-html='true' data-bs-content=".$texte_tooltip.'">'.$recup_final.'</a>';
                     
                     ?>&nbsp;</td>
                 </tr>
@@ -151,7 +151,7 @@
                     $bonus_final_cac = $bonus_perso + $bonus_defense + $bonus_defense_terrain_cac + $bonus_defense_bat;
                     $bonus_final_dist = $bonus_perso + $bonus_defense + $bonus_defense_terrain_dist + $bonus_defense_bat;
                     
-                    echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">';
+                    echo "<a tabindex='0' href='#' data-bs-toggle='popover' data-bs-trigger='focus' data-bs-placement='top' data-bs-html='true' data-bs-content=".$texte_tooltip.'">';
                     if ($bonus_final_cac == $bonus_final_dist) {
                         echo $bonus_final_cac.'</a>';
                     }
