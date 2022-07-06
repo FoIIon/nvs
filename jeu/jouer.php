@@ -305,6 +305,7 @@ $nom_perso_chef = "";
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="fr">
 	<head>
+		
 		<title>Nord VS Sud</title>
 		
 		<!-- Required meta tags -->
@@ -320,7 +321,7 @@ $nom_perso_chef = "";
 
 	</head>
 
-	<body background='../images/background-wood.jpg'>
+	<body background='../images/background-wood2.jpg'>
 		<header>
 			<?php include("page_jeu/menu_header.php"); ?>
 		</header>
@@ -418,13 +419,14 @@ $nom_perso_chef = "";
 			</main>
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 		<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
 		<script>
 		$(function () {
-			$('[data-toggle="tooltip"]').tooltip();
-			$('[data-toggle="popover"]').popover(); 
+			$('[data-bs-toggle="tooltip"]').tooltip();
+			$('[data-bs-toggle="popover"]').popover(); 
 		})
 		
 		function openNav() {
