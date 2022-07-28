@@ -273,7 +273,7 @@ if($id_compagnie){
 	}
 }
 else {
-	$iMage_compagnie_perso = "";
+	$image_compagnie_perso = "";
 }
 
 // Le perso est-il membre de l'etat major de son camp ?
@@ -296,7 +296,7 @@ if ($nb_em) {
 } 
 
 // Récupération de tous les persos du joueur
-$sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso' ORDER BY id_perso";
+$sql = "SELECT id_perso, nom_perso, chef, image_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' ORDER BY id_perso";
 $res = $mysqli->query($sql);
 
 // init vide
