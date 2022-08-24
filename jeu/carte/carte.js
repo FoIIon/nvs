@@ -1,4 +1,29 @@
-		
+const bataillon = document.getElementById('bataillon');
+bataillon.addEventListener('change', (event)=>{
+    if (event.currentTarget.checked) {
+        alert('checked');
+    } else {
+        alert('not checked');
+    }
+});
+
+const canvas = document.getElementById('map');
+const ctx = canvas.getContext('2d');
+const image = new Image();
+image.onload = drawMap;
+image.src = 'carte.png';
+
+function drawMap(){
+    canvas.width = 603;
+    canvas.height = 603;
+
+    ctx.drawImage(this, 0, 0, this.width, this.height);
+
+    console.log(bataillon);
+    console.log(bataillon.checked);
+}
+
+
 function addMouseChecker(imgId, inputId, valueToShow) {
     
     imgId 	= document.getElementById(imgId);

@@ -47,7 +47,7 @@ $mysqli->query($sql);
 			$res = $mysqli->query($sql);
 			$nb_compagnie = $res->num_rows;	
 		?>
-		<div class="grid">
+		<div class="container">
 			<div class="row">
 				<div class="col d-flex justify-content-center">
 					<h1>Carte Stratégique - Mon perso</h1>
@@ -58,20 +58,37 @@ $mysqli->query($sql);
 					<input type='text' id='idInput' disabled />
 				</div>
 			</div>
-			<div class="row">
-				<div class="col d-flex justify-content-center">
-					<img id='carto' src="<?='image_carte.php?imagename=carte'.$id.'.png';?>">
-				</div>
-			</div>
-			<div class="row">
-				<div class="col d-flex justify-content-center">
-					<form action="carte.php" method="post" name="ss_fond">
-						<input type="submit" name="Submit" value="Retirer la topographie"><br />
-						<input type="submit" name="Submit" value="cercles sur mon bataillon">
-						<?php if ($nb_compagnie) {
-							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
-						} ?>
-					</form>
+			<div class="card">
+				<div class="card-body">
+					<canvas id="map"></canvas>
+					<div class="p-3 border-top">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="" id="topographie" checked>
+							<label class="form-check-label" for="topographie">
+								Topographie
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="" id="bataillon">
+							<label class="form-check-label" for="bataillon">
+								Mon bataillon
+							</label>
+						</div>
+						<!-- TODO tester si le joueur a une compagnie -->
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="" id="compagnie">
+							<label class="form-check-label" for="compagnie">
+								Ma compagnie
+							</label>
+						</div>
+						<!-- TODO option réservée ? -->
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="" id="zone_bloquage">
+							<label class="form-check-label" for="zone_bloquage">
+								Zone bloquage
+							</label>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
