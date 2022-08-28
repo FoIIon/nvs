@@ -1,0 +1,9 @@
+{
+    "__comment1":"sql pour brouillard",
+    "brouillard":"SELECT x_carte, y_carte, fond_carte FROM carte WHERE coordonnees NOT IN (SELECT ca.coordonnees FROM carte ca LEFT JOIN instance_batiment ib ON ((ca.x_carte BETWEEN(ib.x_instance -20) AND (ib.x_instance +20)) AND (ca.y_carte BETWEEN(ib.y_instance -20) AND(ib.y_instance +20))) WHERE (ib.id_batiment=8 OR ib.id_batiment=9) AND ib.camp_instance = ?) AND coordonnees NOT IN (SELECT ca2.coordonnees FROM carte ca2 LEFT JOIN instance_batiment ib2 ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=11 AND ib2.camp_instance = ?) AND coordonnees NOT IN (SELECT ca3.coordonnees FROM carte ca3 LEFT JOIN instance_batiment ib2 ON ((ca3.x_carte BETWEEN(ib2.x_instance -5) AND (ib2.x_instance +5)) AND (ca3.y_carte BETWEEN(ib2.y_instance -5) AND(ib2.y_instance +5))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = ?) AND TIME_TO_SEC(TIMEDIFF(NOW(), vue_sud_date))>?",
+    "listAllPlayersSideCharts":"SELECT count(*) AS compte, p.clan AS camp FROM perso p WHERE p.bataillon NOT IN ('Général de l''Union', 'Général du Sud') AND p.DLA_perso > NOW() - INTERVAL ? DAY GROUP BY p.clan ORDER BY p.clan",
+    
+    "__comment2":"sql pour armes",
+    "listAllArmes":"SELECT SUM(pourcentage)/ count(pourcentage) AS 'precision', SUM(degats)/count(degats) AS degats, count(pourcentage) AS attaques, a.nom_arme AS arme, p.clan AS camp FROM log l LEFT JOIN arme a ON a.id_arme = l.id_arme JOIN perso p ON p.id_perso = l.id_perso WHERE type_action like 'attaque%' AND p.id_perso < 50000 GROUP BY l.id_arme, p.clan"
+
+}

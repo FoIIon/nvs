@@ -1,5 +1,7 @@
 <?php
 
+
+
 require_once("../../fonctions.php");
 if(isset($_POST['function']) && isset($_POST['type'])){
     if(strcmp($_POST["type"], "player") == 0){
@@ -8,9 +10,9 @@ if(isset($_POST['function']) && isset($_POST['type'])){
         $sqlPropertiesObj = json_decode($json_data);
 
         switch($_POST['function']){
-            case 'myCampMap':{
+            case 'brouillard':{
                 header('Content-Type: application/json');
-                echo json_encode(exec_sql(getJsonProperty($sqlPropertiesObj, 'listAllPlayers')));
+                echo json_encode(getBrouillard(getJsonProperty($sqlPropertiesObj, 'brouillard'), 2));
             }break;
             case 'playersSideCharts' :{
                 if(paramsIsSet()){
@@ -77,14 +79,16 @@ function getJsonProperty($json, $property){
     }
 }
 
-//Pour les requetes qui concernent les joueurs actif depuis $params jours
-function exec_sql_with_max_days($sql, $active_for){
+//Brouillard de guerre
+function getBrouillard($sql, $camp){
     $mysqli = db_connexion();
     $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param('i', $active_for);
+    $brouillard_duration = BROUILLARD_DE_GUERRE_S;
+    $stmt->bind_param('iiii', $camp, $camp, $camp, $brouillard_duration);
     $stmt->execute();
     $res = $stmt->get_result();
     return $res->fetch_all(MYSQLI_ASSOC);
+    
 }
 
 //Pour les requêtes qui ne nécessitent pas de paramètres
@@ -93,4 +97,11 @@ function exec_sql($sql){
     $sql = $sql;
     $res = $mysqli->query($sql);
     return $res->fetch_all(MYSQLI_ASSOC);
+}
+
+function log_file($type, $text){
+    //Something to write to txt log
+    $log  = $type.' '.date("F j, Y, g:i a")." : ".$text.PHP_EOL;
+    //Save string to log, use FILE_APPEND to append.
+    file_put_contents('log.log', $log, FILE_APPEND);
 }

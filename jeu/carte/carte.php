@@ -33,7 +33,7 @@ $mysqli->query($sql);
 
 	</head>
 	
-	<body onload="addMouseChecker('carto', 'idInput', 'xy');">
+	<body>
 		
 		<p align="center"><a href="../jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 		<div class="row">
@@ -232,7 +232,7 @@ $mysqli->query($sql);
 		echo "</form>";
 		
 	}*/-->
-
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 		<script src="carte.js"></script>
 	</body>
