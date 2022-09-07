@@ -12,7 +12,8 @@ if(isset($_POST['function']) && isset($_POST['type'])){
         switch($_POST['function']){
             case 'brouillard':{
                 header('Content-Type: application/json');
-                echo json_encode(getBrouillard(getJsonProperty($sqlPropertiesObj, 'brouillard'), 2));
+
+                echo json_encode(array_merge(getBrouillard(getJsonProperty($sqlPropertiesObj, 'brouillard'), 2), getBrouillard(getJsonProperty($sqlPropertiesObj, 'hors_brouillard'), 2)));
             }break;
             case 'playersSideCharts' :{
                 if(paramsIsSet()){
@@ -90,6 +91,18 @@ function getBrouillard($sql, $camp){
     return $res->fetch_all(MYSQLI_ASSOC);
     
 }
+
+//Hors brouillard de guerre
+/*function getHorsBrouillard($sql, $camp){
+    $mysqli = db_connexion();
+    $stmt = $mysqli->prepare($sql);
+    $brouillard_duration = BROUILLARD_DE_GUERRE_S;
+    $stmt->bind_param('iiii', $camp, $camp, $camp, $brouillard_duration);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    return $res->fetch_all(MYSQLI_ASSOC);
+    
+}*/
 
 //Pour les requêtes qui ne nécessitent pas de paramètres
 function exec_sql($sql){

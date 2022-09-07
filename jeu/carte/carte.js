@@ -43,6 +43,9 @@ function drawMap(){
 }
 
 function drawBrouillard(data){
+    
+		ctx.fillStyle = noir;
+        ctx.fillRect((0), (((0))), 603, 603);
     Object.keys(data).forEach(function(k){
         //console.log(k + ' - ' + data[k]);
         let x 			= data[k]["x_carte"];
