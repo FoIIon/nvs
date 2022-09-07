@@ -1,4 +1,4 @@
-// couleurs perso_carte
+// couleurs perso_carte brouillard
 const noir 							= 'rgb(0, 0, 0)'; // noir
 const brouillard_general			= noir;
 const couleur_vert 					= 'rgb(10, 254, 10)'; // vert bien voyant
@@ -15,6 +15,17 @@ const couleur_brouillard_colinne	= 'rgb(133, 109, 77)'; // Bistre
 const couleur_brouillard_desert		= 'rgb(225, 206, 154)'; // Vanille
 const couleur_brouillard_foret		= 'rgb(97, 77, 26)'; // Vanille
 
+// couleurs hors brouillard
+const plaine 	                    = 'rgb(129, 156, 84)'; // vert clair
+const colline 	                    = 'rgb(96, 110, 70)'; // 
+const montagne 	                    = 'rgb(134, 118, 89)'; // marron foncé
+const desert 	                    = 'rgb(215, 197, 101)'; // jaune foncé (penchant vers le marron)
+const neige 		                = 'rgb(232, 248, 248)'; // blanc
+const marecage 	                    = 'rgb(169, 177, 166)'; // gris
+const foret 		                = 'rgb(60, 86, 33)'; // vert foncé
+const eau 		                    = 'rgb(92, 191, 207)'; // bleu clair
+const eau_p 		                = 'rgb(39, 141, 227)'; // bleu foncé
+
 const bataillon = document.getElementById('bataillon');
 bataillon.addEventListener('change', (event)=>{
     if (event.currentTarget.checked) {
@@ -30,6 +41,9 @@ const image = new Image();
 image.onload = drawMap;
 image.src = 'carte.png';
 
+var brouillard;
+var hors_brouillard;
+
 function drawMap(){
     canvas.width = 603;
     canvas.height = 603;
@@ -37,20 +51,29 @@ function drawMap(){
     ctx.drawImage(this, 0, 0, this.width, this.height);
 
     canvas.addEventListener('mousemove', function(e){checkMousePos(canvas, inputId, e);}, false);
+    
+    //map en noir
+    ctx.fillStyle = noir;
+    ctx.fillRect((0), (((0))), 603, 603);
+
+    //affichage du brouillard
     getBrouillard();
+
+    //affichage de ce qui est visible
+    getHorsBrouillard();
+
     console.log(bataillon);
     console.log(bataillon.checked);
 }
 
-function drawBrouillard(data){
+function drawBrouillard(){
     
-		ctx.fillStyle = noir;
-        ctx.fillRect((0), (((0))), 603, 603);
-    Object.keys(data).forEach(function(k){
+		
+    Object.keys(brouillard).forEach(function(k){
         //console.log(k + ' - ' + data[k]);
-        let x 			= data[k]["x_carte"];
-		let y 			= data[k]["y_carte"];
-		let fond		= data[k]["fond_carte"];
+        let x 			= brouillard[k]["x_carte"];
+		let y 			= brouillard[k]["y_carte"];
+		let fond		= brouillard[k]["fond_carte"];
 		let couleur_brouillard = "";
 
 		if (fond == '3.gif') {
@@ -82,8 +105,60 @@ function drawBrouillard(data){
         ctx.fillRect(((x*3)-1), (((600-(y*3)))-4), 3, 3);
 		//imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
     });
-    console.log(data);
+    console.log(brouillard);
     //for 
+}
+
+function drawHorsBrouillard(){
+    Object.keys(hors_brouillard).forEach(function(k){
+        //console.log(k + ' - ' + data[k]);
+        let x 			= hors_brouillard[k]["x_carte"];
+		let y 			= hors_brouillard[k]["y_carte"];
+		let fond		= hors_brouillard[k]["fond_carte"];
+		let couleur = "";
+
+		if (fond == '3.gif') {
+			// Montagne
+			couleur = montagne;
+		}
+		else if (fond == '2.gif') {
+			// Colinne
+			couleur = colline;
+		}
+		else if (fond == '4.gif') {
+			// Desert
+			couleur = desert;
+		}
+        else if (fond == '5.gif') {
+			// Neige
+			couleur = neige;
+		}
+        else if (fond == '6.gif') {
+			// Marécage
+			couleur = marecage;
+		}
+		else if (fond == '7.gif') {
+			// Foret
+			couleur = foret;
+		}
+        else if (fond == 'b5b.png' || fond == 'b5r.png') {
+			// pont
+			couleur = couleur_bat_neutre;
+		}
+		else if (fond == '8.gif') {
+			// eau 
+			couleur = eau;
+		}else if(fond == '9.gif'){
+            couleur = eau_p;
+        }
+		else {
+			// plaine et autres
+			couleur = plaine;
+		}
+		ctx.fillStyle = couleur;
+        ctx.fillRect(((x*3)-1), (((600-(y*3)))-4), 3, 3);
+		//imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
+    });
 }
 
 function getBrouillard(){
@@ -91,10 +166,30 @@ function getBrouillard(){
         method: "POST",
         url: "functions_carte.php",
         data:{
-            "type" :"player",
             "function":"brouillard"
         },
-        success: drawBrouillard,
+        success: function(data){
+            brouillard = data;
+            drawBrouillard();
+        },
+        error: function(error_data){
+            console.log("Endpoint GET request error");
+            console.log(error_data)
+        }
+    });
+}
+
+function getHorsBrouillard(){
+    $.ajax({
+        method: "POST",
+        url: "functions_carte.php",
+        data:{
+            "function":"hors_brouillard"
+        },
+        success: function(data){
+            hors_brouillard = data;
+            drawHorsBrouillard();
+        },
         error: function(error_data){
             console.log("Endpoint GET request error");
             console.log(error_data)

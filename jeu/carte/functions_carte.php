@@ -3,62 +3,46 @@
 
 
 require_once("../../fonctions.php");
-if(isset($_POST['function']) && isset($_POST['type'])){
-    if(strcmp($_POST["type"], "player") == 0){
+if(isset($_POST['function'])){
 
-        $json_data = file_get_contents('carte_sql.json');
-        $sqlPropertiesObj = json_decode($json_data);
+    $json_data = file_get_contents('carte_sql.json');
+    $sqlPropertiesObj = json_decode($json_data);
 
-        switch($_POST['function']){
-            case 'brouillard':{
+    switch($_POST['function']){
+        case 'brouillard':{
+            header('Content-Type: application/json');
+
+            echo json_encode(getBrouillard(getJsonProperty($sqlPropertiesObj, 'brouillard'), 2));
+        }break;
+        case 'hors_brouillard' :{
+            header('Content-Type: application/json');
+
+            echo json_encode(getBrouillard(getJsonProperty($sqlPropertiesObj, 'hors_brouillard'), 2));
+        }break;
+        case 'playersGrouillotsCharts' :{
+            if(paramsIsSet()){
+                $params = json_decode($_POST['params'], true);//true to return an array
                 header('Content-Type: application/json');
-
-                echo json_encode(array_merge(getBrouillard(getJsonProperty($sqlPropertiesObj, 'brouillard'), 2), getBrouillard(getJsonProperty($sqlPropertiesObj, 'hors_brouillard'), 2)));
-            }break;
-            case 'playersSideCharts' :{
-                if(paramsIsSet()){
-                    $params = json_decode($_POST['params'], true);//true to return an array
-                    header('Content-Type: application/json');
-                    echo json_encode(exec_sql_with_max_days(getJsonProperty($sqlPropertiesObj, 'listAllPlayersSideCharts'), $params['activeFor']));
-                }
-                
-            }break;
-            case 'playersGrouillotsCharts' :{
-                if(paramsIsSet()){
-                    $params = json_decode($_POST['params'], true);//true to return an array
-                    header('Content-Type: application/json');
-                    echo json_encode(exec_sql_with_max_days(getJsonProperty($sqlPropertiesObj, 'listAllPlayersGrouillotCharts'), $params['activeFor']));
-                }
-                
-            }break;
-            case 'playersGradeCharts' :{
-                if(paramsIsSet()){
-                    $params = json_decode($_POST['params'], true);//true to return an array
-                    header('Content-Type: application/json');
-                    echo json_encode(exec_sql_with_max_days(getJsonProperty($sqlPropertiesObj, 'listAllPlayersGradeCharts'), $params['activeFor']));
-                }
-                
-            }break;
+                echo json_encode(exec_sql_with_max_days(getJsonProperty($sqlPropertiesObj, 'listAllPlayersGrouillotCharts'), $params['activeFor']));
+            }
             
-            case 'pgPieChart':{
-                if(paramsIsSet()){
-                    $params = json_decode($_POST['params'], true);//true to return an array
-                    header('Content-Type: application/json');
-                    echo json_encode(exec_sql_with_max_days(getJsonProperty($sqlPropertiesObj, 'listAllPgCharts'), $params['activeFor']));
-                }
-            }break;
-        }
-    }else if(strcmp($_POST["type"], "arme") == 0){
-
-        $json_data = file_get_contents('statistiques_sql.json');
-        $sqlPropertiesObj = json_decode($json_data);
-
-        switch($_POST['function']){
-            case 'listAll':{
+        }break;
+        case 'playersGradeCharts' :{
+            if(paramsIsSet()){
+                $params = json_decode($_POST['params'], true);//true to return an array
                 header('Content-Type: application/json');
-                echo json_encode(exec_sql(getJsonProperty($sqlPropertiesObj, 'listAllArmes')));
-            }break;
-        }
+                echo json_encode(exec_sql_with_max_days(getJsonProperty($sqlPropertiesObj, 'listAllPlayersGradeCharts'), $params['activeFor']));
+            }
+            
+        }break;
+        
+        case 'pgPieChart':{
+            if(paramsIsSet()){
+                $params = json_decode($_POST['params'], true);//true to return an array
+                header('Content-Type: application/json');
+                echo json_encode(exec_sql_with_max_days(getJsonProperty($sqlPropertiesObj, 'listAllPgCharts'), $params['activeFor']));
+            }
+        }break;
     }
 }
 
