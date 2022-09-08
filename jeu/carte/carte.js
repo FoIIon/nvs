@@ -1,3 +1,6 @@
+const pixel_size = 5;
+const pixel_distance = 1;
+
 // couleurs perso_carte brouillard
 const noir 							= 'rgb(0, 0, 0)'; // noir
 const brouillard_general			= noir;
@@ -42,11 +45,11 @@ image.onload = drawMap;
 image.src = 'carte.png';
 
 var brouillard;
-var hors_brouillard;
+var visible;
 
 function drawMap(){
-    canvas.width = 603;
-    canvas.height = 603;
+    canvas.width = 201 * pixel_size + 199 * pixel_distance;
+    canvas.height = 201 * pixel_size + 199 * pixel_distance;
 
     ctx.drawImage(this, 0, 0, this.width, this.height);
 
@@ -54,7 +57,7 @@ function drawMap(){
     
     //map en noir
     ctx.fillStyle = noir;
-    ctx.fillRect((0), (((0))), 603, 603);
+    ctx.fillRect((0), (((0))), canvas.width, canvas.height);
 
     //affichage du brouillard
     getBrouillard();
@@ -110,11 +113,11 @@ function drawBrouillard(){
 }
 
 function drawHorsBrouillard(){
-    Object.keys(hors_brouillard).forEach(function(k){
+    Object.keys(visible).forEach(function(k){
         //console.log(k + ' - ' + data[k]);
-        let x 			= hors_brouillard[k]["x_carte"];
-		let y 			= hors_brouillard[k]["y_carte"];
-		let fond		= hors_brouillard[k]["fond_carte"];
+        let x 			= visible[k]["x_carte"];
+		let y 			= visible[k]["y_carte"];
+		let fond		= visible[k]["fond_carte"];
 		let couleur = "";
 
 		if (fond == '3.gif') {
@@ -187,7 +190,7 @@ function getHorsBrouillard(){
             "function":"hors_brouillard"
         },
         success: function(data){
-            hors_brouillard = data;
+            visible = data;
             drawHorsBrouillard();
         },
         error: function(error_data){
