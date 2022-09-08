@@ -105,7 +105,7 @@ function drawBrouillard(){
 			couleur_brouillard = couleur_brouillard_plaine;
 		}
 		ctx.fillStyle = couleur_brouillard;
-        ctx.fillRect(((x*3)-1), (((600-(y*3)))-4), 3, 3);
+        ctx.fillRect(((x*(pixel_size + pixel_distance))), ((canvas.width-y*(pixel_size + pixel_distance))), pixel_size, pixel_size);
 		//imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
     });
     console.log(brouillard);
@@ -159,7 +159,7 @@ function drawHorsBrouillard(){
 			couleur = plaine;
 		}
 		ctx.fillStyle = couleur;
-        ctx.fillRect(((x*3)-1), (((600-(y*3)))-4), 3, 3);
+        ctx.fillRect(((x*(pixel_size + pixel_distance))), ((canvas.width-y*(pixel_size + pixel_distance))), pixel_size, pixel_size);
 		//imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
     });
 }
@@ -187,7 +187,7 @@ function getHorsBrouillard(){
         method: "POST",
         url: "functions_carte.php",
         data:{
-            "function":"hors_brouillard"
+            "function":"visible"
         },
         success: function(data){
             visible = data;

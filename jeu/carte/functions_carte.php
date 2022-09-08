@@ -14,10 +14,10 @@ if(isset($_POST['function'])){
 
             echo json_encode(getBrouillard(getJsonProperty($sqlPropertiesObj, 'brouillard'), 2));
         }break;
-        case 'hors_brouillard' :{
+        case 'visible' :{
             header('Content-Type: application/json');
 
-            echo json_encode(getBrouillard(getJsonProperty($sqlPropertiesObj, 'hors_brouillard'), 2));
+            echo json_encode(getBrouillard(getJsonProperty($sqlPropertiesObj, 'visible'), 2));
         }break;
         case 'playersGrouillotsCharts' :{
             if(paramsIsSet()){
