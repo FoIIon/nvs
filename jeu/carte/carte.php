@@ -69,18 +69,30 @@ $mysqli->query($sql);
 							</label>
 						</div>
 						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="" id="bataillon">
-							<label class="form-check-label" for="bataillon">
-								Mon bataillon
+							<input class="form-check-input" type="checkbox" value="" id="brouillard" checked>
+							<label class="form-check-label" for="brouillard">
+								Brouillard
 							</label>
 						</div>
-						<!-- TODO tester si le joueur a une compagnie -->
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="" id="batiments" checked>
+							<label class="form-check-label" for="batiments">
+								Batiments
+							</label>
+						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" value="" id="compagnie">
 							<label class="form-check-label" for="compagnie">
 								Ma compagnie
 							</label>
 						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="" id="bataillon">
+							<label class="form-check-label" for="bataillon">
+								Mon bataillon
+							</label>
+						</div>
+						
 						<!-- TODO option réservée ? -->
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" value="" id="zone_bloquage">
