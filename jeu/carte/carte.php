@@ -46,6 +46,14 @@ $mysqli->query($sql);
 			$sql = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res = $mysqli->query($sql);
 			$nb_compagnie = $res->num_rows;	
+
+			//Le perso appartient-il au génie
+			$sql = "SELECT genie FROM perso where id_perso='$id'";
+			$result = $mysqli->query($sql);
+			
+			
+			$perso = mysql_fetch_field($result, 0);
+			
 		?>
 		<div class="container">
 			<div class="row">
@@ -80,18 +88,25 @@ $mysqli->query($sql);
 								Batiments
 							</label>
 						</div>
+						<?php 
+							if($perso->genie > 0){
+								require_once("contraintes_batiments.php");
+							}
+						?>
+						
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="" id="bataillon" checked>
+							<label class="form-check-label" for="bataillon">
+								Mon bataillon
+							</label>
+						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" value="" id="compagnie">
 							<label class="form-check-label" for="compagnie">
 								Ma compagnie
 							</label>
 						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="" id="bataillon">
-							<label class="form-check-label" for="bataillon">
-								Mon bataillon
-							</label>
-						</div>
+
 						
 						<!-- TODO option réservée ? -->
 						<div class="form-check">

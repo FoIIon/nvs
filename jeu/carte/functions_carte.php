@@ -12,11 +12,12 @@ if(isset($_SESSION["id_perso"])){
     $id_perso = $_SESSION['id_perso'];
 	
 	// recuperation de l'id et du clan du chef
-	$sql = "SELECT p.id_perso, p.clan, p.bataillon, comp.nom_compagnie FROM perso p LEFT JOIN perso_in_compagnie pic ON pic.id_perso = p.id_perso LEFT JOIN compagnies comp ON comp.id_compagnie = pic.id_compagnie WHERE p.id_perso=$id_perso";
+	$sql = "SELECT p.id_perso, p.clan, p.bataillon, p.idJoueur_perso, comp.nom_compagnie FROM perso p LEFT JOIN perso_in_compagnie pic ON pic.id_perso = p.id_perso LEFT JOIN compagnies comp ON comp.id_compagnie = pic.id_compagnie WHERE p.id_perso=$id_perso";
 	$res = $mysqli->query($sql);
 	$t_chef = $res->fetch_assoc();
 	
 	$joueur->id 		= $t_chef["id_perso"];
+	$joueur->id_joueur 	= $t_chef["idJoueur_perso"];
 	$joueur->clan 		= $t_chef["clan"];
 	$joueur->compagnie 	= $t_chef["nom_compagnie"];
     $joueur->bataillon  = $t_chef["bataillon"];
@@ -24,11 +25,11 @@ if(isset($_SESSION["id_perso"])){
     
 }else{
 //gerer non connecte    
-   // exit();
-    $joueur->id 		= 2;
+    exit();
+   /* $joueur->id 		= 2;
 	$joueur->clan 		= 2;
     $joueur->compagnie 	= 'TIG-RES';
-    $joueur->bataillon  = 'Général du Sud';
+    $joueur->bataillon  = 'Général du Sud';*/
 }
 
 if(isset($_POST['function'])){
@@ -57,9 +58,9 @@ function getJsonProperty($json, $property){
 
 //fonction qui créé le json de la map
 function get_json_map($sqlPropertiesObj, $joueur){
-    $sql_clan = get_sql_clan($joueur);
+    $sql_clan = get_sql_clan($joueur, getJsonProperty($sqlPropertiesObj, 'cases_deja_vues'));
     $carte_array = array();
-    $cases_deja_vues = get_cases_deja_vues(getJsonProperty($sqlPropertiesObj, 'cases_deja_vues').$sql_clan);
+    $cases_deja_vues = get_cases_deja_vues($sql_clan);
     
     foreach ($cases_deja_vues as $case) {
         
@@ -69,23 +70,30 @@ function get_json_map($sqlPropertiesObj, $joueur){
             'fond'  =>  $case["fond_carte"]
         );
     }
-    $brouillard = get_brouillard(getJsonProperty($sqlPropertiesObj, 'brouillard'), $joueur->clan);
+    
+    
+    $sql_clan = get_sql_clan($joueur, getJsonProperty($sqlPropertiesObj, 'brouillard'));
+
+    $brouillard = get_brouillard($sql_clan, $joueur->clan);
     foreach ($brouillard as $case) {
         $carte_array[$case['id']]['brouillard']=array(
             'valeur'=>  '1'
         );
     }
     
-    $visible = get_visibles(getJsonProperty($sqlPropertiesObj, 'visible').$sql_clan, $joueur->clan);
+    
+    $sql_clan = get_sql_clan($joueur, getJsonProperty($sqlPropertiesObj, 'visible'));
+    $visible = get_visibles($sql_clan, $joueur->clan);
     foreach ($visible as $case) {
-        if ($case["idPerso_carte"] < 50000 && $case["idPerso_carte"] > 0){
+        //visible si le perso n'est pas en foret 
+        if ($case["idPerso_carte"] < 50000 && $case["idPerso_carte"] > 0 && ($case["fond_carte"] != '7.gif' || $case["idJoueur_perso"] == $joueur->id_joueur)){
             if($joueur->clan == $case["clan"]){
                 $carte_array[$case['id']]['joueur']=array(
                     'id'        => $case["idPerso_carte"],
                     'image'     => $case["image_carte"],
                     'camp'      => $case["clan"]         
                 );
-                if($joueur->bataillon == $case["bataillon"]){
+                if($case["idJoueur_perso"] == $joueur->id_joueur){
                     $carte_array[$case['id']]['joueur']['bataillon'] = trim($case["bataillon"]);
                 }
                 if(isSet($case["nom_compagnie"]) && $joueur->compagnie == $case["nom_compagnie"]){
@@ -123,7 +131,7 @@ function get_json_map($sqlPropertiesObj, $joueur){
             'id'        => $case["id_perso"],
             'camp'      => $case["clan"]         
         );
-        if($joueur->bataillon == $case["bataillon"]){
+        if($case["idJoueur_perso"] == $joueur->id_joueur){
             $case_joueur["bataillon"]=trim($case["bataillon"]);
         }
         if(isSet($case["nom_compagnie"]) && $joueur->compagnie == $case["nom_compagnie"]){
@@ -137,16 +145,15 @@ function get_json_map($sqlPropertiesObj, $joueur){
 }
 
 
-
 //bout de sql à ajouter aux requetes en fonction du clan du joueur
-function get_sql_clan($joueur){
+function get_sql_clan($joueur, $sql){
     
-    if($joueur->clan == '1'){
-        return ' vue_nord = 1';
-    }else if ($joueur->clan == '2'){
-        return ' vue_sud = 1';
+    if ($joueur->clan == '2'){
+        $sql = str_replace("vue_nord", "vue_sud", $sql);
+    }else{
+       // str_replace("vue_nord", "", $sql);
     }
-    return '';
+    return $sql;
 }
 
 //Brouillard de guerre

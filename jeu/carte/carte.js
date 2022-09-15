@@ -34,10 +34,9 @@ const couleur_foret 		        = 'rgb(60, 86, 33)'; // vert foncé
 const couleur_eau 		            = 'rgb(92, 191, 207)'; // bleu clair
 const couleur_eau_p 		        = 'rgb(39, 141, 227)'; // bleu foncé
 
-const bataillon_checkbox = document.getElementById('bataillon');
-bataillon_checkbox.addEventListener('change', (event)=>{
-    //comme le stroke déborde, on redessine le background
-    drawBackground();
+
+const topographie_checkbox = document.getElementById('topographie');
+topographie_checkbox.addEventListener('change', (event)=>{
     mapTiles.forEach(tile =>{
         tile.draw(canvas, ctx);
     });
@@ -58,8 +57,10 @@ batiments_checkbox.addEventListener('change', (event)=>{
         }
     });
 });
-const topographie_checkbox = document.getElementById('topographie');
-topographie_checkbox.addEventListener('change', (event)=>{
+const bataillon_checkbox = document.getElementById('bataillon');
+bataillon_checkbox.addEventListener('change', (event)=>{
+    //comme le stroke déborde, on redessine le background
+    drawBackground();
     mapTiles.forEach(tile =>{
         tile.draw(canvas, ctx);
     });
