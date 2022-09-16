@@ -92,7 +92,6 @@ if(isset($_SESSION["id_perso"])){
 				}
 				else {
 					if ($fond_carte != '1.gif') {
-						echo $fond_carte;
 						$verif_fond_carte = false;
 					}
 				}
