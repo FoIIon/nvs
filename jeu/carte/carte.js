@@ -57,6 +57,12 @@ batiments_checkbox.addEventListener('change', (event)=>{
         }
     });
 });
+const contraintes_batiments_checkbox = document.getElementById('contraintes_batiments');
+contraintes_batiments_checkbox.addEventListener('change', (event)=>{
+    mapTiles.forEach(tile =>{
+        tile.draw(canvas, ctx);
+    });
+});
 const bataillon_checkbox = document.getElementById('bataillon');
 bataillon_checkbox.addEventListener('change', (event)=>{
     //comme le stroke déborde, on redessine le background
@@ -178,6 +184,8 @@ class Case{
         }else if(topographie_checkbox.checked){
             ctx.fillStyle = this.couleur;
             ctx.fillRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+        }else if(contraintes_batiments_checkbox.checked){
+            
         }else{
             ctx.fillStyle = grey;
             ctx.fillRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
@@ -200,6 +208,11 @@ class Case{
 			// Desert
             this.couleur             = couleur_desert;
 			this.couleur_brouillard  = couleur_brouillard_desert;
+		}
+		else if (this.fond == '6.gif') {
+			// marécage
+            this.couleur             = couleur_marecage;
+			this.couleur_brouillard  = couleur_brouillard_marecage;
 		}
 		else if (this.fond == '7.gif') {
 			// Foret
