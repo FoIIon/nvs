@@ -2,34 +2,37 @@
 session_start();
 require_once("../../fonctions.php");
 
-$mysqli = db_connexion();
-
-$joueur = new StdClass();
 $sqlPropertiesObj;
 
 if(isset($_SESSION["id_perso"])){
     
-    $id_perso = $_SESSION['id_perso'];
+   $perso = get_perso($_SESSION["id_perso"]);
+
+    
+}else{
+//gerer non connecte    
+   // exit();
+   /* $joueur->id 		= 2;
+	$joueur->clan 		= 2;
+    $joueur->compagnie 	= 'TIG-RES';
+    $joueur->bataillon  = 'Général du Sud';*/
+}
+
+function get_perso($id_perso){
 	
+    $mysqli = db_connexion();
 	// recuperation de l'id et du clan du chef
 	$sql = "SELECT p.id_perso, p.clan, p.bataillon, p.idJoueur_perso, comp.nom_compagnie FROM perso p LEFT JOIN perso_in_compagnie pic ON pic.id_perso = p.id_perso LEFT JOIN compagnies comp ON comp.id_compagnie = pic.id_compagnie WHERE p.id_perso=$id_perso";
 	$res = $mysqli->query($sql);
 	$t_chef = $res->fetch_assoc();
 	
-	$joueur->id 		= $t_chef["id_perso"];
-	$joueur->id_joueur 	= $t_chef["idJoueur_perso"];
-	$joueur->clan 		= $t_chef["clan"];
-	$joueur->compagnie 	= $t_chef["nom_compagnie"];
-    $joueur->bataillon  = $t_chef["bataillon"];
-
-    
-}else{
-//gerer non connecte    
-    exit();
-   /* $joueur->id 		= 2;
-	$joueur->clan 		= 2;
-    $joueur->compagnie 	= 'TIG-RES';
-    $joueur->bataillon  = 'Général du Sud';*/
+    $perso = new StdClass();
+	$perso->id 		    = $t_chef["id_perso"];
+	$perso->id_joueur 	= $t_chef["idJoueur_perso"];
+	$perso->clan 		= $t_chef["clan"];
+	$perso->compagnie 	= $t_chef["nom_compagnie"];
+    $perso->bataillon   = $t_chef["bataillon"];
+    return $perso;
 }
 
 if(isset($_POST['function'])){
@@ -40,9 +43,22 @@ if(isset($_POST['function'])){
     switch($_POST['function']){
         case 'get_map':{
             header('Content-Type: application/json');
-            $json_map = get_json_map($sqlPropertiesObj, $joueur);
+            $json_map = get_json_map($sqlPropertiesObj, $perso, false);
             echo $json_map;
             break;
+        }
+        case 'do_historique':{
+            //historique de carte des généraux sans les informations sur les compagnies et bataillon
+            $lincoln = get_perso(1);
+            $json_map = get_json_map($sqlPropertiesObj, $lincoln, true);
+            save_historique_map($sqlPropertiesObj, $json_map, $lincoln);
+            
+            $davis = get_perso(2);
+            $json_map = get_json_map($sqlPropertiesObj, $davis, true);
+            save_historique_map($sqlPropertiesObj, $json_map, $davis);
+        }
+        case 'get_historique':{
+
         }
     }
 }
@@ -57,7 +73,7 @@ function getJsonProperty($json, $property){
 }
 
 //fonction qui créé le json de la map
-function get_json_map($sqlPropertiesObj, $joueur){
+function get_json_map($sqlPropertiesObj, $joueur, $isHistorique){
     $sql_clan = get_sql_clan($joueur, getJsonProperty($sqlPropertiesObj, 'cases_deja_vues'));
     $carte_array = array();
     $cases_deja_vues = get_cases_deja_vues($sql_clan);
@@ -93,10 +109,10 @@ function get_json_map($sqlPropertiesObj, $joueur){
                     'image'     => $case["image_carte"],
                     'camp'      => $case["clan"]         
                 );
-                if($case["idJoueur_perso"] == $joueur->id_joueur){
+                if(!$isHistorique && $case["idJoueur_perso"] == $joueur->id_joueur){
                     $carte_array[$case['id']]['joueur']['bataillon'] = trim($case["bataillon"]);
                 }
-                if(isSet($case["nom_compagnie"]) && $joueur->compagnie == $case["nom_compagnie"]){
+                if(!$isHistorique && isSet($case["nom_compagnie"]) && $joueur->compagnie == $case["nom_compagnie"]){
                     $carte_array[$case['id']]['joueur']['compagnie'] = trim($case["nom_compagnie"]);
                 }
             }else{
@@ -131,10 +147,10 @@ function get_json_map($sqlPropertiesObj, $joueur){
             'id'        => $case["id_perso"],
             'camp'      => $case["clan"]         
         );
-        if($case["idJoueur_perso"] == $joueur->id_joueur){
+        if(!$isHistorique && $case["idJoueur_perso"] == $joueur->id_joueur){
             $case_joueur["bataillon"]=trim($case["bataillon"]);
         }
-        if(isSet($case["nom_compagnie"]) && $joueur->compagnie == $case["nom_compagnie"]){
+        if(!$isHistorique && isSet($case["nom_compagnie"]) && $joueur->compagnie == $case["nom_compagnie"]){
             $case_joueur["compagnie"] = trim($case["nom_compagnie"]);
         }
         
@@ -144,6 +160,37 @@ function get_json_map($sqlPropertiesObj, $joueur){
     return json_encode($carte_array);
 }
 
+
+//fonction qui sauvegarge un historique de la map
+function save_historique_map($sqlPropertiesObj, $json_map, $chef_de_clan){
+    if (!exist_today_carte_historique($sqlPropertiesObj, $chef_de_clan)){
+        $sql = getJsonProperty($sqlPropertiesObj, 'insert_carte_historique');
+        $mysqli = db_connexion();
+        if($stmt = $mysqli->prepare($sql)){
+            $stmt->bind_param('is', $chef_de_clan->clan, $json_map);
+            $stmt->execute();
+        }else{
+            echo 'Error';
+            die();
+        }
+        return 'Success';
+    }
+}
+
+//fonction qui teste si un historique de carte a deja été fait aujourd'hui
+function exist_today_carte_historique($sqlPropertiesObj, $chef_de_clan){
+    $sql = getJsonProperty($sqlPropertiesObj, 'select_today_carte_historique');
+    $mysqli = db_connexion();
+    if($stmt = $mysqli->prepare($sql)){
+        $stmt->bind_param('i', $chef_de_clan->clan);
+        $stmt->execute();
+        
+        $res = $stmt->get_result();
+        return $res->num_rows > 0;
+    }else{
+        return false;
+    }
+}
 
 //bout de sql à ajouter aux requetes en fonction du clan du joueur
 function get_sql_clan($joueur, $sql){

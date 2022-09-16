@@ -18,6 +18,7 @@ const couleur_bat_neutre			= 'rgb(130, 130, 130)'; // gris batiments
 const couleur_rail					= 'rgb(200, 200, 200)'; // gris rails
 const couleur_brouillard_plaine		= 'rgb(208, 192, 122)'; // Chamois
 const couleur_brouillard_eau		= 'rgb(187, 174, 152)'; // Gr�ge
+const couleur_brouillard_marecage   = 'rgb(175, 176, 118)';
 const couleur_brouillard_montagne	= 'rgb(47, 27, 12)'; // Cachou
 const couleur_brouillard_colinne	= 'rgb(133, 109, 77)'; // Bistre
 const couleur_brouillard_desert		= 'rgb(225, 206, 154)'; // Vanille
@@ -95,15 +96,31 @@ class Case{
 
     draw(canvas, ctx){
         this.setCouleur();
+        if(this.x==115 && this.y==120){
+            console.log(this)
+        }
         if(batiments_checkbox.checked && this.batiment != undefined){
             //on utilise l'image
             if(this.batiment.nom == 'Fort' || this.batiment.nom == 'Fortin' || this.batiment.nom == 'Gare' || this.batiment.nom == 'Hopital' || this.batiment.nom == 'Pont'|| this.batiment.nom == 'Train' || this.batiment.nom == 'Pénitencier' || this.batiment.nom == 'Point stratégique'){
+                
+                let me = this;
+                if(this.batiment.nom == 'Point stratégique'){
+                    
+                    if(this.batiment.camp == 1){
+                        this.couleur = couleur_bat_clan1;
+                    }else if(this.batiment.camp == 2){
+                        this.couleur = couleur_bat_clan2;
+                    }else {
+                        this.couleur = noir;
+                    }
+                    ctx.strokeStyle = this.couleur;
+                    ctx.lineWidth = pixel_size/2;
+                    ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+                }
                 var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
                 img.src = '../../images_perso/'+this.batiment.image;
-                let x=this.x;
-                let y=this.y;
                 img.onload = function(){
-                    ctx.drawImage(img, (x*(pixel_size + pixel_distance)), (canvas.width-y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+                    ctx.drawImage(img, me.getX(canvas), me.getY(canvas), pixel_size, pixel_size);
                 };
             }else{
                 //on utilise une couleur
@@ -115,7 +132,7 @@ class Case{
                     this.couleur = couleur_bat_neutre;
                 }
                 ctx.fillStyle = this.couleur;
-                ctx.fillRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+                ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             }
             
             if(this.joueur != undefined && compagnie_checkbox.checked){
@@ -123,7 +140,7 @@ class Case{
                     /* this.joueur contains the element we're looking for */
                     ctx.strokeStyle = blanc;
                     ctx.lineWidth = pixel_size/2;
-                    ctx.strokeRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+                    ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
                 }
             }
             if(this.joueur != undefined && bataillon_checkbox.checked){
@@ -131,7 +148,7 @@ class Case{
                     /* this.joueur contains the element we're looking for */
                     ctx.strokeStyle = 'orange';
                     ctx.lineWidth = pixel_size/2;
-                    ctx.strokeRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+                    ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
                 }
             }
         }else if(this.joueur != undefined && !Array.isArray(this.joueur)){
@@ -146,22 +163,22 @@ class Case{
                 
                 ctx.strokeStyle = blanc;
                 ctx.lineWidth = pixel_size/2;
-                ctx.strokeRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+                ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             }
             if(bataillon_checkbox.checked && this.joueur.bataillon != undefined){
                 ctx.strokeStyle = 'orange';
                 ctx.lineWidth = pixel_size/2;
-                ctx.strokeRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+                ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             }
             ctx.fillStyle = this.couleur;
             ctx.lineWidth = pixel_size/2;
-            ctx.fillRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             /*var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
             img.src = '../../images_perso/'+this.joueur.image;
             let x=this.x;
             let y=this.y;
             img.onload = function(){
-                ctx.drawImage(img, (x*(pixel_size + pixel_distance)), (canvas.width-y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+                ctx.drawImage(img, this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             };*/
             
         }else if(this.pnj != undefined){
@@ -170,27 +187,35 @@ class Case{
             let x=this.x;
             let y=this.y;
             img.onload = function(){
-                ctx.drawImage(img, (x*(pixel_size + pixel_distance)), (canvas.width-y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+                ctx.drawImage(img, this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             };*/
             ctx.fillStyle = noir;
-            ctx.fillRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
         }else if(this.brouillard != undefined && this.brouillard.valeur == 1 && brouillard_checkbox.checked){
             if(topographie.checked){
                 ctx.fillStyle = this.couleur_brouillard;
             }else{
                 ctx.fillStyle = couleur_brouillard_plaine;
             }
-            ctx.fillRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
         }else if(topographie_checkbox.checked){
             ctx.fillStyle = this.couleur;
-            ctx.fillRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
         }else if(contraintes_batiments_checkbox.checked){
             
         }else{
             ctx.fillStyle = grey;
-            ctx.fillRect((this.x*(pixel_size + pixel_distance)), (canvas.width-this.y*(pixel_size + pixel_distance)), pixel_size, pixel_size);
+            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
         }
 
+    }
+
+    getX(canvas){
+        return (this.x*(pixel_size + pixel_distance));
+    }
+
+    getY(canvas){
+        return (canvas.width-this.y*(pixel_size + pixel_distance));
     }
 
     setCouleur(){
@@ -275,7 +300,28 @@ function drawBackground(){
     ctx.fillStyle = gris_brouillard;
     ctx.fillRect((0), (0), canvas.width, canvas.height);
 }
-
+/*
+function drawStar(ctx, centerX,centerY,arms,innerRadius,outerRadius,startAngle,fillStyle,strokeStyle,lineWidth) {
+    startAngle = startAngle * Math.PI / 180  || 0;
+    var step = Math.PI / arms,
+        angle = startAngle
+        ,hyp,x,y;
+    ctx.strokeStyle = strokeStyle;
+    ctx.fillStyle = fillStyle;
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    for (var i =0,len= 2 * arms; i <len; i++) {
+      hyp = i & 1 ? innerRadius : outerRadius;
+      x = centerX + Math.cos(angle) * hyp;
+      y = centerY +Math.sin(angle) * hyp;
+      angle+=step;
+      ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    fillStyle && ctx.fill();
+    strokeStyle && ctx.stroke();
+  }
+*/
 function get_map(){
     $.ajax({
         method: "POST",
