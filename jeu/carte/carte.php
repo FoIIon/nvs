@@ -42,7 +42,7 @@ $mysqli->query($sql);
 			</div>
 		</div>
 		<?php
-			// Le perso appartient-il à une compagnie 
+			/*// Le perso appartient-il à une compagnie 
 			$sql = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res = $mysqli->query($sql);
 			$nb_compagnie = $res->num_rows;	
@@ -51,8 +51,7 @@ $mysqli->query($sql);
 			$sql = "SELECT genie FROM perso where id_perso='$id'";
 			$result = $mysqli->query($sql);
 			
-			
-			$perso = mysql_fetch_field($result, 0);
+			$perso = $result->fetch_array(MYSQLI_ASSOC);*/
 			
 		?>
 		<div class="container">
@@ -89,9 +88,9 @@ $mysqli->query($sql);
 							</label>
 						</div>
 						<?php 
-							if($perso->genie > 0){
+							//if($perso["genie"] > 0){
 								require_once("contraintes_batiments.php");
-							}
+							//}
 						?>
 						
 						<div class="form-check">

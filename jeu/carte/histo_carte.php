@@ -5,7 +5,7 @@ if (isset($_SESSION["id_perso"])) {
 	
 	$id = $_SESSION["id_perso"];
 
-	require_once "../../../fonctions.php";
+	require_once "../../fonctions.php";
 	
 	$mysqli = db_connexion();
 	
