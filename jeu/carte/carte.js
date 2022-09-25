@@ -1,4 +1,14 @@
-const pixel_size = 5;
+Date.prototype.yyyymmdd = function() {
+    var mm = this.getMonth() + 1; // getMonth() is zero-based
+    var dd = this.getDate();
+
+    return [this.getFullYear(),
+            (mm>9 ? '' : '0') + mm,
+            (dd>9 ? '' : '0') + dd
+            ].join('-');
+};
+
+const pixel_size = adjustPixelSizeOnScreenSize();
 const pixel_distance = 1;
 const map_size = 201;
 
@@ -57,13 +67,13 @@ batiments_checkbox.addEventListener('change', (event)=>{
             tile.draw(canvas, ctx);
         }
     });
-});
+});/*
 const contraintes_batiments_checkbox = document.getElementById('contraintes_batiments');
 contraintes_batiments_checkbox.addEventListener('change', (event)=>{
     mapTiles.forEach(tile =>{
         tile.draw(canvas, ctx);
     });
-});
+});*/
 const bataillon_checkbox = document.getElementById('bataillon');
 bataillon_checkbox.addEventListener('change', (event)=>{
     //comme le stroke déborde, on redessine le background
@@ -81,9 +91,83 @@ compagnie_checkbox.addEventListener('change', (event)=>{
     });
 });
 
-const inputId = document.getElementById('idInput');
 const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
+
+
+var mapTiles;
+var upToDateMap;
+var histoMaps = new Map();
+
+//datepicker en français
+;(function($){
+    $.fn.datepicker.dates['fr'] = {
+    days: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
+    daysShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
+    daysMin: ["d", "l", "ma", "me", "j", "v", "s"],
+    months: ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+    monthsShort: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+    today: "Aujourd'hui",
+    monthsTitle: "Mois",
+    clear: "Effacer",
+    weekStart: 1,
+    format: "dd/mm/yyyy"
+    };
+}(jQuery));
+
+$( document ).ready(function(){
+    
+    canvas.addEventListener('mousemove', function(e){checkMousePos(canvas, e);}, false);
+
+    let startDate='20/09/2022';
+    $(canvas).hover(function(){
+        $(this).css('cursor','pointer').css('font-weight', 'bold');//.attr('title', 'This is a hover text.');
+        //todo improve tooltip http://jsfiddle.net/mannemvamsi/X8MD7/
+    }, function() {
+        $(this).css('cursor','auto');
+    });
+     $('#datepicker').datepicker({
+        language: 'fr',
+        autoclose: true,
+        todayHighlight: true,
+        todayBtn: true,
+        startDate: startDate,
+        endDate: new Date()
+    }).on("changeDate", function(e){
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        if(e.date == undefined || e.date.valueOf() === today.valueOf()){
+            $('#carousel-control-next').hide();
+            $('#carousel-control-prev').hide();
+            $('#carouselTitle').hide();
+            drawMap(upToDateMap);
+        }else{
+            get_historique_map($('#datepicker').datepicker('getDate').yyyymmdd());
+            $('#carousel-control-next').show();
+            if($('#datepicker').datepicker('getDate').toLocaleDateString('fr-FR') != startDate){
+                $('#carousel-control-prev').show();
+            }else{
+                $('#carousel-control-prev').hide();
+            }
+            $('#carouselTitle').text("Map du " + $('#datepicker').datepicker('getDate').toLocaleDateString('fr-FR')).show();
+        }
+    });
+    
+    $('#carousel-control-next').on("click", function(e){
+        let date = $('#datepicker').datepicker('getDate');
+        date.setTime(date.getTime() + (1000*60*60*24));
+        $('#datepicker').datepicker("setDate", date);
+    });
+    $('#carousel-control-prev').on("click", function(e){
+        let date = $('#datepicker').datepicker('getDate');
+        date.setTime(date.getTime() - (1000*60*60*24));
+        $('#datepicker').datepicker("setDate", date);
+    });
+    $('#carousel-control-next').hide();
+    $('#carousel-control-prev').hide();
+    $('#carouselTitle').hide();
+});
+
 
 class Case{
     couleur;
@@ -94,11 +178,12 @@ class Case{
 		
     }
 
+    setTooltipContent(){
+       $(canvas).attr('title', this.x + " - " + this.y).css('font-weight', 'bold');;
+    }
+
     draw(canvas, ctx){
         this.setCouleur();
-        if(this.x==115 && this.y==120){
-            console.log(this)
-        }
         if(batiments_checkbox.checked && this.batiment != undefined){
             //on utilise l'image
             if(this.batiment.nom == 'Fort' || this.batiment.nom == 'Fortin' || this.batiment.nom == 'Gare' || this.batiment.nom == 'Hopital' || this.batiment.nom == 'Pont'|| this.batiment.nom == 'Train' || this.batiment.nom == 'Pénitencier' || this.batiment.nom == 'Point stratégique'){
@@ -201,9 +286,9 @@ class Case{
         }else if(topographie_checkbox.checked){
             ctx.fillStyle = this.couleur;
             ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-        }else if(contraintes_batiments_checkbox.checked){
+        }/*else if(contraintes_batiments_checkbox.checked){
             
-        }else{
+        }*/else{
             ctx.fillStyle = grey;
             ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
         }
@@ -268,30 +353,30 @@ class Case{
 }
 
 
-var map;
-var mapTiles=[];
 
 get_map();
 
-function drawMap(){
+function drawMap(data){
+    console.log(data)
     canvas.width = map_size * pixel_size + (map_size - 2) * pixel_distance;
     canvas.height = map_size * pixel_size + (map_size - 2) * pixel_distance;
 
 
     drawBackground();
     
-    canvas.addEventListener('mousemove', function(e){checkMousePos(canvas, inputId, e);}, false);
+    
     //affichage
-    Object.keys(map).forEach(function(k){
+    let tiles = [];
+    Object.keys(data).forEach(function(k){
 
-        let tile = new Case(map[k]);
-        mapTiles.push(tile);
+        let tile = new Case(data[k]);
+        tiles.push(tile);
 
 
 		tile.draw(canvas, ctx);
         
     });
-
+    mapTiles = toMap(tiles, toKey);
     map="";
 }
 
@@ -330,8 +415,8 @@ function get_map(){
             "function":"get_map"
         },
         success: function(data){
-            map = data;
-            drawMap();
+            upToDateMap = data;
+            drawMap(data);
         },
         error: function(error_data){
             console.log("Endpoint request error");
@@ -340,15 +425,67 @@ function get_map(){
     });
 }
 
+function get_historique_map(historique_date){
 
-function checkMousePos(canvas, inputId, e) {
+    if(histoMaps.has(historique_date)){
+        drawMap(histoMaps.get(historique_date));
+    }else{
+        $.ajax({
+            method: "POST",
+            url: "functions_carte.php",
+            data:{
+                "function":"get_historique",
+                "date":historique_date
+            },
+            success:function(data){
+                histoMaps.set(historique_date, data);
+                drawMap(data);
+            },
+            error:function(error_data){
+                console.log("Endpoint request error");
+                console.log(error_data)
+            }
+        });
+    }
+    
+}
+
+
+function checkMousePos(canvas,  e) {
     
     var x = e.offsetX;
     var y = e.offsetY;
     var pos = [];
     pos['x'] 	= Math.floor(x/(pixel_size + pixel_distance));
     pos['y'] 	= Math.floor((canvas.width-y)/(pixel_size + pixel_distance));
-    pos['xy'] 	= pos['x'] +','+ pos['y'];
+    pos['xy'] 	= pos['x'] +'-'+ pos['y'];
     
-    inputId.value = pos['xy'];
+    //inputId.value = pos['xy'];
+    var tile = mapTiles.get(pos['xy']);
+    
+    //je mets à jour le tooltip si la case existe
+    tile != undefined ? tile.setTooltipContent():'';
 }
+
+function adjustPixelSizeOnScreenSize(){
+    let width = window.innerWidth;
+
+    if(width<1100){
+        return 3;
+    }else if(width<1600){
+        return 4;
+    }
+    return 5;   
+}
+
+//Fonctions qui permettent de transformer en map la liste de cases pour une recherche plus rapide
+function toKey(tile){
+    return `${tile.x}-${tile.y}`;
+}
+
+function toMap(list, toKey){
+    const keyValuePairs = list.map(item => [toKey(item), item]);
+    return new Map(keyValuePairs);
+}
+
+//fonction to histo map

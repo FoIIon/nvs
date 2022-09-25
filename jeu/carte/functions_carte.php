@@ -56,9 +56,18 @@ if(isset($_POST['function'])){
             $davis = get_perso(2);
             $json_map = get_json_map($sqlPropertiesObj, $davis, true);
             save_historique_map($sqlPropertiesObj, $json_map, $davis);
+            break;
         }
         case 'get_historique':{
-
+            if(isset($_POST['date'])){
+                header('Content-Type: application/json');
+                //$davis = get_perso(2); //uncomment to test
+                $json_map = get_json_historique_map($sqlPropertiesObj, $perso, $_POST['date']);
+                echo $json_map;
+            }else{
+                echo'Error no date provided';
+            }
+            break;
         }
     }
 }
@@ -160,6 +169,25 @@ function get_json_map($sqlPropertiesObj, $joueur, $isHistorique){
     return json_encode($carte_array);
 }
 
+//fonction qui récupère une map historique à une date donnée
+function get_json_historique_map($sqlPropertiesObj, $joueur, $dateHistorique){
+    $sql = getJsonProperty($sqlPropertiesObj, 'get_carte_historique');
+    $mysqli = db_connexion();
+    if($stmt = $mysqli->prepare($sql)){
+        $stmt->bind_param('is', $joueur->clan, $dateHistorique);
+        $stmt->execute();
+    }else{
+        echo 'Error';
+        die();
+    }
+    $res = $stmt->get_result();
+    if($res->num_rows != 1){
+        echo 'Error, not 1 result';
+        die();
+    }
+    $row = $res->fetch_row();
+    return $row[0];
+}
 
 //fonction qui sauvegarge un historique de la map
 function save_historique_map($sqlPropertiesObj, $json_map, $chef_de_clan){
@@ -174,6 +202,8 @@ function save_historique_map($sqlPropertiesObj, $json_map, $chef_de_clan){
             die();
         }
         return 'Success';
+    }else{
+        echo 'entry already exists';
     }
 }
 

@@ -7,5 +7,6 @@
 
     "__comment2":"sql pour carte_historique",
     "insert_carte_historique":"INSERT INTO carte_historique(clan, carte_date, carte_json) VALUES (?,CURDATE(),?)",
-    "select_today_carte_historique":"SELECT id_carte_historique FROM carte_historique WHERE carte_date=CURDATE() AND clan = ?"
+    "select_today_carte_historique":"SELECT id_carte_historique FROM carte_historique WHERE carte_date=CURDATE() AND clan = ?",
+    "get_carte_historique":"SELECT carte_json FROM carte_historique WHERE clan = ? AND carte_date = ?"
 }
