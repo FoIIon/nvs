@@ -32,6 +32,7 @@ $mysqli->query($sql);
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
 		<style>
 			#page {
 					background-image: url("../../images/background-wood2.jpg");
@@ -57,7 +58,10 @@ $mysqli->query($sql);
 			}*/
 			#map {
 				width:100%;
+				/*width:690px;
+				height : 690px;*/
 			}
+			
 		</style>
 
 	</head>
@@ -170,6 +174,8 @@ $mysqli->query($sql);
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+		
 		<script src="carte.js"></script>
+		<script src="Case.js"></script>
 	</body>
 </html>	
