@@ -44,6 +44,12 @@ $mysqli->query($sql);
 			h1{
 				color:white
 			}
+			#wrapper {
+				position: relative;
+				border: 1px solid #9C9898;
+				width: 100%;
+				height: 100%;
+			}
 			/*@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
 				html {
 					transform: rotate(-90deg);
@@ -101,10 +107,12 @@ $mysqli->query($sql);
 								<span class="visually-hidden">Next</span>
 							</button>
 							<div class="carousel-item active">
-								<canvas id="map"></canvas>
-								<div  class="carousel-caption d-none d-md-block">
-									<h5 id="carouselTitle">First slide label</h5>
-									<!--<p id="carouselContent">Some representative placeholder content for the first slide.</p>-->
+								<div id="wrapper">
+									<canvas id="map"></canvas>
+									<div  class="carousel-caption d-none d-md-block">
+										<h5 id="carouselTitle">First slide label</h5>
+										<!--<p id="carouselContent">Some representative placeholder content for the first slide.</p>-->
+									</div>
 								</div>
 							</div>
 						</div>

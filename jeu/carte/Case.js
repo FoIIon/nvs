@@ -12,6 +12,9 @@ class Case{
     }
 
     draw(canvas, ctx){
+
+        this.cleanTile(ctx);
+
         this.setCouleur();
         if(batiments_checkbox.checked && this.batiment != undefined){
             //on utilise l'image
@@ -122,6 +125,18 @@ class Case{
             ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
         }
 
+    }
+
+    cleanTile(ctx){
+        ctx.clearRect(this.getX(canvas)+0.5, this.getY(canvas)+0.5, pixel_size-1, pixel_size-1);
+        ctx.fillStyle = grey;
+        ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+    }
+
+    drawMouseOver(canvas, ctx){
+        ctx.fillStyle = blanc;
+        //la surcouche ne couvre pas entièrement la case pour éviter un effet "ghost" sur les cases survolées
+        ctx.fillRect(this.getX(canvas)+0.4, this.getY(canvas)+0.4, pixel_size-0.8, pixel_size-0.8);
     }
 
     getX(canvas){

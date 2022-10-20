@@ -100,6 +100,8 @@ var mapTiles;
 var upToDateMap;
 var histoMaps = new Map();
 
+var currentTile;
+
 var translatePos = {
     x: 0,
     y: 0
@@ -131,7 +133,12 @@ var originy = 0;
 $( document ).ready(function(){
     
     get_map();
-    canvas.addEventListener('mousemove', function(e){checkMousePos(canvas, e);}, false);
+    canvas.addEventListener('mousemove', function(e){
+        let tile = getTileMousePos(canvas, e);
+        
+        //je mets à jour le tooltip si la case existe
+        tile != undefined ? tile.setTooltipContent():'';
+    }, false);
     /*canvas.addEventListener("touchmove", function (e) {
         var touch = e.touches[0];
         var mouseEvent = new MouseEvent("mousemove", {
@@ -203,17 +210,34 @@ $( document ).ready(function(){
 
     canvas.addEventListener("mouseover", function(evt) {
         mouseDown = false;
+
+        
+        
     });
 
     canvas.addEventListener("mouseout", function(evt) {
         mouseDown = false;
+        if(currentTile != undefined){
+            currentTile.draw(canvas, ctx);
+        }
     });
 
     canvas.addEventListener("mousemove", function(event) {
         if (mouseDown) {
-            translatePos.x = event.clientX - startDragOffset.x;
-            translatePos.y = event.clientY - startDragOffset.y;
+            let newTransX = event.clientX - startDragOffset.x;
+            let newTransY = event.clientY - startDragOffset.y;
+            
+            adjustedTranslatePos(newTransX, newTransY);
+
             drawMap(upToDateMap);
+        }else {
+            if(currentTile != undefined){
+                currentTile.draw(canvas, ctx);
+            }
+            currentTile = getTileMousePos(canvas, event);
+            if(currentTile != undefined){
+                currentTile.drawMouseOver(canvas, ctx);
+            }
         }
     });
 
@@ -237,32 +261,38 @@ $( document ).ready(function(){
         
         //const zoom =  Math.min(Math.max(.125, wheel), 4);
         
-        // Translate so the visible origin is at the context's origin.
-       // ctx.translate(translatePos.x, translatePos.y);
-    
-        // Compute the new visible origin. Originally the mouse is at a
-        // distance mouse/scale from the corner, we want the point under
-        // the mouse to remain in the same place after the zoom, but this
-        // is at mouse/new_scale away from the corner. Therefore we need to
-        // shift the origin (coordinates of the corner) to account for this.
-        translatePos.x -= mousex/(scale*zoom) - mousex/scale;
-        translatePos.y -= mousey/(scale*zoom) - mousey/scale;
-        
-        // Scale it (centered around the origin due to the trasnslate above).
-       // ctx.scale(zoom, zoom);
-        // Offset the visible origin to it's proper position.
-       // ctx.translate(-translatePos.x, -translatePos.y);
+
+       let newTransX = - mousex + canvas.width/2;
+       let newTransY = - mousey + canvas.height/2;
+       adjustedTranslatePos(newTransX, newTransY);
 
         // Update scale and others.
         scale *= zoom;
-        console.log(scale)
-        console.log(translatePos.x, translatePos.y)
         drawMap(upToDateMap);
     });
 
 });
 
 
+function adjustedTranslatePos(newTranslatePosX, newTranslatePosY){
+    
+    if(newTranslatePosX > 0){
+        newTranslatePosX = 0;
+    }
+
+    if(newTranslatePosY > 0){
+        newTranslatePosY = 0;
+    }
+    if((canvas.width * scale + newTranslatePosX) < canvas.width){
+        newTranslatePosX =  canvas.width - canvas.width * scale;
+    }
+    if((canvas.height * scale + newTranslatePosY) < canvas.height){
+        newTranslatePosY =  canvas.height - canvas.height * scale;
+    }
+    
+    translatePos.x = newTranslatePosX;
+    translatePos.y = newTranslatePosY;
+}
 
 
 
@@ -270,8 +300,10 @@ function drawMap(data){
     canvas.width = map_size * pixel_size + (map_size - 2) * pixel_distance + pixel_size/2+pixel_distance;
     canvas.height = map_size * pixel_size + (map_size - 2) * pixel_distance + pixel_size;
 
+    if(translatePos.x <= 0 && translatePos.y <= 0 && (canvas.width * scale + translatePos.x) >= canvas.width && (canvas.height * scale + translatePos.y) >= canvas.height){
+        ctx.translate(translatePos.x, translatePos.y);
+    }
     
-    ctx.translate(translatePos.x, translatePos.y);
     ctx.scale(scale, scale);
 
     drawBackground();
@@ -363,23 +395,23 @@ function get_historique_map(historique_date){
 }
 
 
-function checkMousePos(canvas,  e) {
+function getTileMousePos(canvas,  e) {
     
     let difX = canvas.offsetWidth / canvas.width;
     let difY = canvas.offsetHeight / canvas.height;
 
-    var x = e.offsetX / difX;
-    var y = e.offsetY / difY;
+    var x = (e.offsetX/ difX) - translatePos.x;
+    var y = (e.offsetY/ difY) - translatePos.y;
+    
+    console.log(x, x/((pixel_size + pixel_distance)*scale), difX,  e.offsetX, scale, translatePos.x, (pixel_size + pixel_distance), canvas.offsetWidth, canvas.width);
     var pos = [];
-    pos['x'] 	= Math.floor(x/(pixel_size + pixel_distance));
-    pos['y'] 	= Math.floor((canvas.width-y)/(pixel_size + pixel_distance));
+    pos['x'] 	= Math.floor(x/((pixel_size + pixel_distance)*scale));
+    pos['y'] 	= Math.floor((canvas.height*scale-y)/((pixel_size + pixel_distance)*scale));
     pos['xy'] 	= pos['x'] +'-'+ pos['y'];
     
-    //inputId.value = pos['xy'];
     var tile = mapTiles.get(pos['xy']);
     
-    //je mets à jour le tooltip si la case existe
-    tile != undefined ? tile.setTooltipContent():'';
+    return tile;
 }
 
 function adjustPixelSizeOnScreenSize(){
