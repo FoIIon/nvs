@@ -12,7 +12,7 @@ class Case{
     }
 
     draw(canvas, ctx){
-
+        let me = this;
         this.cleanTile(ctx);
 
         this.setCouleur();
@@ -20,7 +20,7 @@ class Case{
             //on utilise l'image
             if(this.batiment.nom == 'Fort' || this.batiment.nom == 'Fortin' || this.batiment.nom == 'Gare' || this.batiment.nom == 'Hopital' || this.batiment.nom == 'Pont'|| this.batiment.nom == 'Train' || this.batiment.nom == 'Pénitencier' || this.batiment.nom == 'Point stratégique'){
                 
-                let me = this;
+                
                 if(this.batiment.nom == 'Point stratégique'){
                     
                     if(this.batiment.camp == 1){
@@ -34,22 +34,24 @@ class Case{
                     ctx.lineWidth = pixel_size/2;
                     ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
                 }
-                var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
-                img.src = '../../images_perso/'+this.batiment.image;
-                img.onload = function(){
-                    ctx.drawImage(img, me.getX(canvas), me.getY(canvas), pixel_size, pixel_size);
-                };
+                this.drawImageIfLoaded(canvas, '../../images_perso/'+this.batiment.image);
+               
             }else{
-                //on utilise une couleur
-                if(this.batiment.camp == 1){
-                    this.couleur = couleur_bat_clan1;
-                }else if(this.batiment.camp == 2){
-                    this.couleur = couleur_bat_clan2;
-                }else {
-                    this.couleur = couleur_bat_neutre;
+
+                if(scale===maxScale){
+                    this.drawFondCase(ctx);
+                    this.drawImageIfLoaded(canvas, '../../images_perso/'+this.batiment.image);
+                }else{
+                    //on utilise une couleur
+                    if(this.batiment.camp == 1){
+                        this.couleur = couleur_bat_clan1;
+                    }else if(this.batiment.camp == 2){
+                        this.couleur = couleur_bat_clan2;
+                    }else {
+                        this.couleur = couleur_bat_neutre;
+                    }
+                    this.drawFondCase(ctx);
                 }
-                ctx.fillStyle = this.couleur;
-                ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             }
             
             if(this.joueur != undefined && compagnie_checkbox.checked){
@@ -68,7 +70,7 @@ class Case{
                     ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
                 }
             }
-        }else if(this.joueur != undefined && !Array.isArray(this.joueur)){
+        }else if(this.joueur != undefined && !Array.isArray(this.joueur) && joueurs_checkbox.checked){
             if(this.joueur.camp == 1){
                 this.couleur = couleur_perso_clan1;
             }else if(this.joueur.camp == 2){
@@ -87,9 +89,26 @@ class Case{
                 ctx.lineWidth = pixel_size/2;
                 ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             }
-            ctx.fillStyle = this.couleur;
-            ctx.lineWidth = pixel_size/2;
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+
+            if(scale === maxScale){
+                this.drawImageIfLoaded(canvas, '../../images_perso/'+this.joueur.image, this.drawMatricule);
+               
+                
+                
+            }else{
+                ctx.fillStyle = this.couleur;
+                ctx.lineWidth = pixel_size/2;
+                ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+            }
+            
+            
+        
+            /*var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
+            img.src = '../../images_perso/'+this.joueur.image;
+            img.onload = function(){
+                ctx.drawImage(img, me.getX(canvas), me.getY(canvas), pixel_size, pixel_size);
+            };*/
+            
             /*var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
             img.src = '../../images_perso/'+this.joueur.image;
             let x=this.x;
@@ -99,15 +118,14 @@ class Case{
             };*/
             
         }else if(this.pnj != undefined){
-            /*var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
-            img.src = '../../images/pnj/'+this.pnj.image;
-            let x=this.x;
-            let y=this.y;
-            img.onload = function(){
-                ctx.drawImage(img, this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-            };*/
-            ctx.fillStyle = noir;
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+            if(scale === maxScale){
+                this.drawFondCase(ctx);
+                this.drawImageIfLoaded(canvas, '../../images/pnj/'+this.pnj.image);
+            }else{
+                this.couleur = noir;
+                this.drawFondCase(ctx);
+            }
+            
         }else if(this.brouillard != undefined && this.brouillard.valeur == 1 && brouillard_checkbox.checked){
             if(topographie.checked){
                 ctx.fillStyle = this.couleur_brouillard;
@@ -116,21 +134,70 @@ class Case{
             }
             ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
         }else if(topographie_checkbox.checked){
-            ctx.fillStyle = this.couleur;
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+            if(scale === maxScale){
+                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond);
+                
+            }else{
+                this.drawFondCase(ctx);
+            }
+            
         }/*else if(contraintes_batiments_checkbox.checked){
             
         }*/else{
-            ctx.fillStyle = grey;
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+            this.couleur = gris_brouillard;
+            this.drawFondCase(ctx);
         }
 
     }
 
+    drawMatricule(canvas, ctx, me){
+        ctx.font = "2px Arial";
+        ctx.fillStyle= noir;
+        ctx.textAlign = "center";
+        ctx.fillText(me.joueur.id, me.getX(canvas) + pixel_size / 2, me.getY(canvas) + pixel_size - 0.5);
+    }
+
+    drawImageIfLoaded(canvas, src, onImageDrawned = null){
+        let me = this;
+        var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
+        img.src = src;
+        let result = this.saveImageToCache(img);
+        if(result == 0 || !result.isLoaded){
+            img.onload = function(){
+                img.isLoaded = true;
+                ctx.drawImage(img, me.getX(canvas), me.getY(canvas), pixel_size, pixel_size);
+                if(onImageDrawned != null){
+                    onImageDrawned(canvas, ctx, me);
+                }
+            }
+        }else{
+            ctx.drawImage(result, me.getX(canvas), me.getY(canvas), pixel_size, pixel_size);
+            if(onImageDrawned != null){
+                onImageDrawned(canvas, ctx, me);
+            }
+        }
+    }
+
+    saveImageToCache(img){
+        
+        let result = images.find(x => x.src == img.src);
+        if(result == undefined){
+            images.push(img);
+            return 0;
+        }else{
+            return result;
+        }
+    }
+
+    drawFondCase(ctx){
+        ctx.fillStyle = this.couleur;
+        ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+    }
+
     cleanTile(ctx){
         ctx.clearRect(this.getX(canvas)+0.5, this.getY(canvas)+0.5, pixel_size-1, pixel_size-1);
-        ctx.fillStyle = grey;
-        ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+        ctx.fillStyle = gris_brouillard;
+        ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size+pixel_distance, pixel_size+pixel_distance);
     }
 
     drawMouseOver(canvas, ctx){

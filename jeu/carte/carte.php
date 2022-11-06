@@ -64,6 +64,7 @@ $mysqli->query($sql);
 			}*/
 			#map {
 				width:100%;
+				touch-action: none;
 				/*width:690px;
 				height : 690px;*/
 			}
@@ -109,10 +110,9 @@ $mysqli->query($sql);
 							<div class="carousel-item active">
 								<div id="wrapper">
 									<canvas id="map"></canvas>
-									<div  class="carousel-caption d-none d-md-block">
-										<h5 id="carouselTitle">First slide label</h5>
-										<!--<p id="carouselContent">Some representative placeholder content for the first slide.</p>-->
-									</div>
+									<!--<div id="carousel-caption" class="carousel-caption d-none d-md-block">
+										<h5 id="carouselTitle"></h5>
+									</div>-->
 								</div>
 							</div>
 						</div>
@@ -141,6 +141,12 @@ $mysqli->query($sql);
 						<input class="form-check-input" type="checkbox" value="" id="brouillard" checked>
 						<label class="form-check-label" for="brouillard">
 							Brouillard
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="joueurs" checked>
+						<label class="form-check-label" for="joueurs">
+							Joueurs
 						</label>
 					</div>
 					<div class="form-check">
@@ -185,5 +191,6 @@ $mysqli->query($sql);
 		
 		<script src="carte.js"></script>
 		<script src="Case.js"></script>
+		
 	</body>
 </html>	
