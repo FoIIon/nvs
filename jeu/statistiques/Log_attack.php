@@ -1,47 +1,54 @@
 <?php
 
-class Log_attack implements \JsonSerializable{
+final class Log_attack extends Model implements \JsonSerializable{
+
 
     //attacker
-    private $id_attacker;
-    private $attacker_type;
-    private $attacker_unit_type;
-    private $attack_type;//cac - dist - charge
+    private $id_attacker; //perso id or bat id of the attacker
+    private $attacker_type;//player - pnj - bat
+    private $id_attacker_unit_type;
+    private $attack_type;//cac - dist - charge - collat
+	private $nb_collat;
 	private $attacker_turn;
     private $pc_earn;
     private $xp_earn;
     private $effective_precision; //chance de touche réelle au moment de l'attaque
-    private $id_case_attack;
-    private $case_ground_type_attacker;
-    private $case_ground_bonus_precision_attacker; //bonus can also be a malus if negative
+    private $id_tile_attack;
+    private $tile_ground_type_attacker;
+    private $tile_ground_bonus_precision_attacker; //bonus can also be a malus if negative
     private $distance_attack;
-    private $case_bonus_distance_attack; //bonus can also be a malus if negative
+    private $tile_bonus_distance_attack; //bonus can also be a malus if negative
     private $pv_attacker;
     private $attacker_side;
     private $id_building_attacker; //id du batiment dans lequel se trouve le joueur
     private $building_bonus_precision_attacker; //bonus can also be a malus if negative
     private $building_type_attacker; //fortin, ps, train, ...
+	private $attack_given_malus; //quel malus a donner l'attaque à la cible
+	private $attacker_max_pa;//combien de pa max possède le perso
+	private $attacker_xp; //combien d'xp possède l'attaquant au moment de l'attaque
 
     //target
     private $id_target;
     private $target_type;
-    private $target_unit_type;
+    private $id_target_unit_type;
     private $protection;
-    private $id_case_target;
-    private $case_ground_type_target;
-    private $case_ground_bonus_precision_target; //bonus can also be a malus if negative
-    private $case_malus_distance_target; //est-ce que la case de la cible donne un malus de distance à l'attaquant ?
+    private $id_tile_target;
+    private $tile_ground_type_target;
+    private $tile_ground_bonus_precision_target; //bonus can also be a malus if negative
+    private $tile_malus_distance_target; //est-ce que la tile de la cible donne un malus de distance à l'attaquant ?
     private $pv_target; //before damage calculation
     private $target_defense; //before attack, without bonus/malus calculation
     private $target_side;
     private $id_building_target; //id du batiment dans lequel se trouve la cible
     private $building_bonus_precision_target; //bonus can also be a malus if negative
     private $building_type_target; //fortin, ps, train, ...
+	private $target_died; //est-ce que l'attaque a permis la capture / destruction ?
 
 
     //weapon
     private $id_weapon;
     private $weapon_name;
+	private $damage_type; //attack - collat - train hit - train jump - building destroy
     private $damage_weapon;//ex:20d8
     private $damage; //damage roll without any deduction
     private $damage_bonus; //bonus charge par ex
@@ -50,24 +57,15 @@ class Log_attack implements \JsonSerializable{
     private $weapon_min_distance;
     
     //generale info
-    private $attck_datetime;
+    private $attack_datetime;
+	private $id;
     
-    
-    public function toString() :self{
-        $class_vars = get_class_vars(get_class($this));
-
-        foreach ($class_vars as $name => $value) {
-            echo get_class($this).' : '. $name .' : ' . $value .' <br/>';
-        }
-    }
-
-	function console_log($with_script_tags = true) {
-		$js_code = 'console.log(' . json_encode($this) . 
-	');';
-		if ($with_script_tags) {
-			$js_code = '<script>' . $js_code . '</script>';
-		}
-		echo $js_code;
+   
+ 
+    /**
+	 */
+	public function __construct() {
+		
 	}
 
 	public function jsonSerialize()
@@ -158,22 +156,6 @@ class Log_attack implements \JsonSerializable{
 	/**
 	 * @return mixed
 	 */
-	public function getAttacker_unit_type() {
-		return $this->attacker_unit_type;
-	}
-	
-	/**
-	 * @param mixed $attacker_unit_type 
-	 * @return self
-	 */
-	public function setAttacker_unit_type($attacker_unit_type): self {
-		$this->attacker_unit_type = $attacker_unit_type;
-		return $this;
-	}
-
-	/**
-	 * @return mixed
-	 */
 	public function getAttack_type() {
 		return $this->attack_type;
 	}
@@ -222,48 +204,48 @@ class Log_attack implements \JsonSerializable{
 	/**
 	 * @return mixed
 	 */
-	public function getId_case_attack() {
-		return $this->id_case_attack;
+	public function getId_tile_attack() {
+		return $this->id_tile_attack;
 	}
 	
 	/**
-	 * @param mixed $id_case_attack 
+	 * @param mixed $id_tile_attack 
 	 * @return self
 	 */
-	public function setId_case_attack($id_case_attack): self {
-		$this->id_case_attack = $id_case_attack;
+	public function setId_tile_attack($id_tile_attack): self {
+		$this->id_tile_attack = $id_tile_attack;
 		return $this;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getCase_ground_type_attacker() {
-		return $this->case_ground_type_attacker;
+	public function getTile_ground_type_attacker() {
+		return $this->tile_ground_type_attacker;
 	}
 	
 	/**
-	 * @param mixed $case_ground_type_attacker 
+	 * @param mixed $tile_ground_type_attacker 
 	 * @return self
 	 */
-	public function setCase_ground_type_attacker($case_ground_type_attacker): self {
-		$this->case_ground_type_attacker = $case_ground_type_attacker;
+	public function setTile_ground_type_attacker($tile_ground_type_attacker): self {
+		$this->tile_ground_type_attacker = $tile_ground_type_attacker;
 		return $this;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getCase_ground_bonus_precision_attacker() {
-		return $this->case_ground_bonus_precision_attacker;
+	public function getTile_ground_bonus_precision_attacker() {
+		return $this->tile_ground_bonus_precision_attacker;
 	}
 	
 	/**
-	 * @param mixed $case_ground_bonus_precision_attacker 
+	 * @param mixed $tile_ground_bonus_precision_attacker 
 	 * @return self
 	 */
-	public function setCase_ground_bonus_precision_attacker($case_ground_bonus_precision_attacker): self {
-		$this->case_ground_bonus_precision_attacker = $case_ground_bonus_precision_attacker;
+	public function setTile_ground_bonus_precision_attacker($tile_ground_bonus_precision_attacker): self {
+		$this->tile_ground_bonus_precision_attacker = $tile_ground_bonus_precision_attacker;
 		return $this;
 	}
 
@@ -286,16 +268,16 @@ class Log_attack implements \JsonSerializable{
 	/**
 	 * @return mixed
 	 */
-	public function getCase_bonus_distance_attack() {
-		return $this->case_bonus_distance_attack;
+	public function getTile_bonus_distance_attack() {
+		return $this->tile_bonus_distance_attack;
 	}
 	
 	/**
-	 * @param mixed $case_bonus_distance_attack 
+	 * @param mixed $tile_bonus_distance_attack 
 	 * @return self
 	 */
-	public function setCase_bonus_distance_attack($case_bonus_distance_attack): self {
-		$this->case_bonus_distance_attack = $case_bonus_distance_attack;
+	public function setTile_bonus_distance_attack($tile_bonus_distance_attack): self {
+		$this->tile_bonus_distance_attack = $tile_bonus_distance_attack;
 		return $this;
 	}
 
@@ -398,22 +380,6 @@ class Log_attack implements \JsonSerializable{
 	/**
 	 * @return mixed
 	 */
-	public function getTarget_unit_type() {
-		return $this->target_unit_type;
-	}
-	
-	/**
-	 * @param mixed $target_unit_type 
-	 * @return self
-	 */
-	public function setTarget_unit_type($target_unit_type): self {
-		$this->target_unit_type = $target_unit_type;
-		return $this;
-	}
-
-	/**
-	 * @return mixed
-	 */
 	public function getProtection() {
 		return $this->protection;
 	}
@@ -430,64 +396,64 @@ class Log_attack implements \JsonSerializable{
 	/**
 	 * @return mixed
 	 */
-	public function getId_case_target() {
-		return $this->id_case_target;
+	public function getId_tile_target() {
+		return $this->id_tile_target;
 	}
 	
 	/**
-	 * @param mixed $id_case_target 
+	 * @param mixed $id_tile_target 
 	 * @return self
 	 */
-	public function setId_case_target($id_case_target): self {
-		$this->id_case_target = $id_case_target;
+	public function setId_tile_target($id_tile_target): self {
+		$this->id_tile_target = $id_tile_target;
 		return $this;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getCase_ground_type_target() {
-		return $this->case_ground_type_target;
+	public function getTile_ground_type_target() {
+		return $this->tile_ground_type_target;
 	}
 	
 	/**
-	 * @param mixed $case_ground_type_target 
+	 * @param mixed $tile_ground_type_target 
 	 * @return self
 	 */
-	public function setCase_ground_type_target($case_ground_type_target): self {
-		$this->case_ground_type_target = $case_ground_type_target;
+	public function setTile_ground_type_target($tile_ground_type_target): self {
+		$this->tile_ground_type_target = $tile_ground_type_target;
 		return $this;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getCase_ground_bonus_precision_target() {
-		return $this->case_ground_bonus_precision_target;
+	public function getTile_ground_bonus_precision_target() {
+		return $this->tile_ground_bonus_precision_target;
 	}
 	
 	/**
-	 * @param mixed $case_ground_bonus_precision_target 
+	 * @param mixed $tile_ground_bonus_precision_target 
 	 * @return self
 	 */
-	public function setCase_ground_bonus_precision_target($case_ground_bonus_precision_target): self {
-		$this->case_ground_bonus_precision_target = $case_ground_bonus_precision_target;
+	public function setTile_ground_bonus_precision_target($tile_ground_bonus_precision_target): self {
+		$this->tile_ground_bonus_precision_target = $tile_ground_bonus_precision_target;
 		return $this;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getCase_malus_distance_target() {
-		return $this->case_malus_distance_target;
+	public function getTile_malus_distance_target() {
+		return $this->tile_malus_distance_target;
 	}
 	
 	/**
-	 * @param mixed $case_malus_distance_target 
+	 * @param mixed $tile_malus_distance_target 
 	 * @return self
 	 */
-	public function setCase_malus_distance_target($case_malus_distance_target): self {
-		$this->case_malus_distance_target = $case_malus_distance_target;
+	public function setTile_malus_distance_target($tile_malus_distance_target): self {
+		$this->tile_malus_distance_target = $tile_malus_distance_target;
 		return $this;
 	}
 
@@ -702,16 +668,16 @@ class Log_attack implements \JsonSerializable{
 	/**
 	 * @return mixed
 	 */
-	public function getAttck_datetime() {
-		return $this->attck_datetime;
+	public function getAttack_datetime() {
+		return $this->attack_datetime;
 	}
 	
 	/**
 	 * @param mixed $attck_datetime 
 	 * @return self
 	 */
-	public function setAttck_datetime($attck_datetime): self {
-		$this->attck_datetime = $attck_datetime;
+	public function setAttack_datetime($attack_datetime): self {
+		$this->attack_datetime = $attack_datetime;
 		return $this;
 	}
 
@@ -730,4 +696,136 @@ class Log_attack implements \JsonSerializable{
 		$this->attacker_turn = $attacker_turn;
 		return $this;
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getNb_collat() {
+		return $this->nb_collat;
+	}
+	
+	/**
+	 * @param mixed $nb_collat 
+	 * @return self
+	 */
+	public function setNb_collat($nb_collat): self {
+		$this->nb_collat = $nb_collat;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getId() {
+		return $this->id;
+	}
+	
+	/**
+	 * @param mixed $id 
+	 * @return self
+	 */
+	public function setId($id): self {
+		$this->id = $id;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getId_attacker_unit_type() {
+		return $this->id_attacker_unit_type;
+	}
+	
+	/**
+	 * @param mixed $id_attacker_unit_type 
+	 * @return self
+	 */
+	public function setId_attacker_unit_type($id_attacker_unit_type): self {
+		$this->id_attacker_unit_type = $id_attacker_unit_type;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getId_target_unit_type() {
+		return $this->id_target_unit_type;
+	}
+	
+	/**
+	 * @param mixed $id_target_unit_type 
+	 * @return self
+	 */
+	public function setId_target_unit_type($id_target_unit_type): self {
+		$this->id_target_unit_type = $id_target_unit_type;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getTarget_died() {
+		return $this->target_died;
+	}
+	
+	/**
+	 * @param mixed $target_died 
+	 * @return self
+	 */
+	public function setTarget_died($target_died): self {
+		$this->target_died = $target_died;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getAttack_given_malus() {
+		return $this->attack_given_malus;
+	}
+	
+	/**
+	 * @param mixed $attack_given_malus 
+	 * @return self
+	 */
+	public function setAttack_given_malus($attack_given_malus): self {
+		$this->attack_given_malus = $attack_given_malus;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getAttacker_max_pa() {
+		return $this->attacker_max_pa;
+	}
+	
+	/**
+	 * @param mixed $attacker_max_pa 
+	 * @return self
+	 */
+	public function setAttacker_max_pa($attacker_max_pa): self {
+		$this->attacker_max_pa = $attacker_max_pa;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getAttacker_xp() {
+		return $this->attacker_xp;
+	}
+	
+	/**
+	 * @param mixed $attacker_xp 
+	 * @return self
+	 */
+	public function setAttacker_xp($attacker_xp): self {
+		$this->attacker_xp = $attacker_xp;
+		return $this;
+	}
+
+	
+
+	
 }
